@@ -10,14 +10,13 @@ public class CityTableBean implements Serializable {
     private List<City> cities;
 
     public CityTableBean() {
-        cities = new ArrayList<>();
     }
 
-    public void addPoint(City city) {
+    public void addCity(City city) {
         cities.add(city);
     }
 
-    public List getPoints() {
+    public List getCities() {
         List<City> reversed = new ArrayList(cities);
         Collections.reverse(reversed);
         return reversed;

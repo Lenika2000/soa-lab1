@@ -3,5 +3,14 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-  <display-name>Archetype Created Web Application</display-name>
+  <display-name>SOA-lab1</display-name>
+  <servlet>
+    <servlet-name>DemoServlet</servlet-name>
+    <servlet-class>DemoServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>DemoServlet</servlet-name>
+    <url-pattern>/DemoServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
