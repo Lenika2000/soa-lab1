@@ -17,11 +17,7 @@ public class CityDao {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()){
             transaction = session.beginTransaction();
-            // get an user object
-
-            cities = session.createQuery("select * from City").getResultList();
-
-            // commit transaction
+            cities = session.createQuery("from City").getResultList();
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
