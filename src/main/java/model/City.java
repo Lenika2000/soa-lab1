@@ -11,7 +11,7 @@ public class City implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn
     private Coordinates coordinates; //Поле не может быть null
     private ZonedDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
@@ -21,7 +21,7 @@ public class City implements Serializable {
     private Double timezone; //Значение поля должно быть больше -13, Максимальное значение поля: 15
     private Government government; //Поле не может быть null
     private StandardOfLiving standardOfLiving; //Поле может быть null
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn
     private Human governor; //Поле может быть null
 
@@ -39,6 +39,14 @@ public class City implements Serializable {
     }
 
     public City() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -1,7 +1,6 @@
-<%@ page import="java.util.List" %>
-<%@ page import="model.City" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:useBean id="citiesBean" class="servlets.CityTableBean" scope="session"/>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <html>
 <head>
@@ -31,24 +30,24 @@
         </tr>
         <c:forEach var="city" items="${cities}">
             <tr>
-                <td><c:out value="${city.id}" /></td>
-                <td><c:out value="${city.name}" /></td>
-                <td><c:out value="${city.coordinates.x}" /></td>
-                <td><c:out value="${city.coordinates.y}" /></td>
-                <td><c:out value="${city.creationDate}" /></td>
-                <td><c:out value="${city.area}" /></td>
-                <td><c:out value="${city.population}" /></td>
-                <td><c:out value="${city.metersAboveSeaLevel}" /></td>
-                <td><c:out value="${city.timezone}" /></td>
-                <td><c:out value="${city.government}" /></td>
-                <td><c:out value="${city.standardOfLiving}" /></td>
-                <td><c:out value="${city.height}" /></td>
-                <td><c:out value="${city.birthday}" /></td>
+                <td>${city.id}</td>
+                <td>${city.name}</td>
+                <td>${city.coordinates.x}</td>
+                <td>${city.coordinates.y}</td>
+                <td>${city.creationDate}</td>
+                <td>${city.area}</td>
+                <td>${city.population}</td>
+                <td>${city.metersAboveSeaLevel}</td>
+                <td>${city.timezone}</td>
+                <td>${city.government}</td>
+                <td>${city.standardOfLiving}</td>
+                <td>${city.governor.height}</td>
+                <td>${city.governor.birthday}</td>
 
                 <td>
-                    <a href="edit?id=<c:out value='${city.id}' />">Edit</a>
+                    <a href="edit?id=${city.id}">Edit</a>
                     &nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="delete?id=<c:out value='${city.id}' />">Delete</a>
+                    <a href="delete?id=${city.id}">Delete</a>
                 </td>
             </tr>
         </c:forEach>

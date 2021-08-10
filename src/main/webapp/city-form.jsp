@@ -14,7 +14,7 @@
 </head>
 <body>
 <section>
-<form action="insert" method="post">
+<form action="insert" method="get">
     <p>Name:
         <input type="text" name="name" /></p>
 
@@ -31,7 +31,7 @@
         <input type="text" name="population" /></p>
 
     <p>Meters above sea level:
-        <input type="text" name="MetersAboveSeaLevel" /></p>
+        <input type="text" name="metersAboveSeaLevel" /></p>
 
     <p>Timezone:
         <input type="text" name="timezone" /></p>
@@ -54,9 +54,10 @@
 
     <p>Governor: </p>
     <p>Height: <input type="text" name="height" /> </p>
-    <p>Birthday: <input type="date" id="start" name="trip-start"
-           value="2018-07-22"
-               min="1900-01-01" max="2020-01-01"> </p>
+    <p>Birthday:</p>
+    <p>Date: <input type="date" id="start" name="birthday-date"
+           value="2000-06-26" ></p>
+    <p>Time: <input type="time" id="appt" name="birthday-time" required></p>
 
     <p><input type="submit" name="submit" value="submit" /></p>
 </form>

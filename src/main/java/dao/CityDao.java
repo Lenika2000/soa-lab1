@@ -4,7 +4,6 @@ import model.City;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import util.HibernateUtil;
-
 import java.util.List;
 
 public class CityDao {
@@ -13,8 +12,8 @@ public class CityDao {
     }
 
     public List<City> getAllCities() {
-        List<City> cities = null;
         Transaction transaction = null;
+        List<City> cities = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()){
             transaction = session.beginTransaction();
             cities = session.createQuery("from City").getResultList();
@@ -42,11 +41,26 @@ public class CityDao {
     public void addCity(City city) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            // start a transaction
             transaction = session.beginTransaction();
-            // save the student object
             session.save(city);
-            // commit transaction
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteCity(Long id) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            City city = session.find(City.class, id);
+            if (city != null) {
+                session.delete(city);
+                session.flush();
+            }
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {

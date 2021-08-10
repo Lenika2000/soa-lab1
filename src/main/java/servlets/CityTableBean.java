@@ -40,9 +40,9 @@ public class CityTableBean extends HttpServlet {
                 case "/insert":
                     addCity(request, response);
                     break;
-//                case "/delete":
-//                    deleteUser(request, response);
-//                    break;
+                case "/delete":
+                    deleteCity(request, response);
+                    break;
 //                case "/edit":
 //                    showEditForm(request, response);
 //                    break;
@@ -72,7 +72,7 @@ public class CityTableBean extends HttpServlet {
     }
 
     private void addCity(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
+            throws SQLException, IOException, ServletException {
         String name = request.getParameter("name");
         Integer x = new Integer(request.getParameter("x"));
         Long y = new Long(request.getParameter("y"));
@@ -83,15 +83,24 @@ public class CityTableBean extends HttpServlet {
         Government government = Government.valueOf(request.getParameter("government"));
         StandardOfLiving standardOfLiving = StandardOfLiving.valueOf(request.getParameter("standardOfLiving"));
         double height = Double.parseDouble(request.getParameter("height"));
-        String birthdayStr =  request.getParameter("birthday"); //1986-04-08 12:30
+        String birthdayDateStr =  request.getParameter("birthday-date"); //1986-04-08
+        String birthdayTimeStr=  request.getParameter("birthday-time"); //12:30
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime birthday = LocalDateTime.parse(birthdayStr, formatter);
-        coordinatesDAO.addCoordinates(new Coordinates(x,y));
-        humanDAO.addHuman(new Human(height, birthday));
-        City city = new City(name, new Coordinates(x,y), ZonedDateTime.now(), area, population, metersAboveSeaLevel, timezone, government, standardOfLiving, new Human(height,birthday));
-        System.out.print(name);
-//        cityDao.addCity(new City(name));
+        LocalDateTime birthday = LocalDateTime.parse(birthdayDateStr + " "+ birthdayTimeStr, formatter);
+        Coordinates newCoordinates = new Coordinates(x,y);
+        Human governor = new Human(height, birthday);
+        coordinatesDAO.addCoordinates(newCoordinates);
+        humanDAO.addHuman(governor);
+        City newCity = new City(name, newCoordinates, ZonedDateTime.now(), area, population, metersAboveSeaLevel, timezone, government, standardOfLiving, governor);
+        cityDao.addCity(newCity);
         // если все прошло удачно
-        response.sendRedirect("cities-table.jsp");
+        getCities(request, response);
+    }
+
+    private void deleteCity(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+        Long id = Long.parseLong(request.getParameter("id"));
+        cityDao.deleteCity(id);
+        getCities(request, response);
     }
 }
