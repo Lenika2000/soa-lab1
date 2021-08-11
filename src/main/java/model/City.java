@@ -38,6 +38,20 @@ public class City implements Serializable {
         this.governor = governor;
     }
 
+    public City(Long id, String name, Coordinates coordinates, ZonedDateTime creationDate, float area, int population, int metersAboveSeaLevel, Double timezone, Government government, StandardOfLiving standardOfLiving, Human governor) {
+        this.id = id;
+        this.name = name;
+        this.coordinates = coordinates;
+        this.creationDate = creationDate;
+        this.area = area;
+        this.population = population;
+        this.metersAboveSeaLevel = metersAboveSeaLevel;
+        this.timezone = timezone;
+        this.government = government;
+        this.standardOfLiving = standardOfLiving;
+        this.governor = governor;
+    }
+
     public City() {
     }
 

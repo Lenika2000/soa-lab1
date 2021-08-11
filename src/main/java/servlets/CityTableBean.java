@@ -1,10 +1,8 @@
 package servlets;
-
 import dao.CityDao;
 import dao.CoordinatesDao;
 import dao.HumanDao;
 import model.*;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,7 +27,7 @@ public class CityTableBean extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException {
         String action = request.getServletPath();
         System.out.print(action);
         try {
@@ -43,17 +41,17 @@ public class CityTableBean extends HttpServlet {
                 case "/delete":
                     deleteCity(request, response);
                     break;
-//                case "/edit":
-//                    showEditForm(request, response);
-//                    break;
-//                case "/update":
-//                    updateUser(request, response);
-//                    break;
+                case "/edit":
+                    showEditForm(request, response);
+                    break;
+                case "/update":
+                    updateCity(request, response);
+                    break;
                 default:
                     getCities(request, response);
                     break;
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             throw new ServletException(ex);
         }
     }
@@ -71,8 +69,18 @@ public class CityTableBean extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
+    private void showEditForm(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        Long id = Long.parseLong(request.getParameter("id"));
+        City existingCity = cityDao.getCityById(id);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("city-form.jsp");
+        request.setAttribute("city", existingCity);
+        dispatcher.forward(request, response);
+
+    }
+
     private void addCity(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException, ServletException {
+            throws IOException, ServletException {
         String name = request.getParameter("name");
         Integer x = new Integer(request.getParameter("x"));
         Long y = new Long(request.getParameter("y"));
@@ -98,9 +106,36 @@ public class CityTableBean extends HttpServlet {
     }
 
     private void deleteCity(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException, ServletException {
+            throws IOException, ServletException {
         Long id = Long.parseLong(request.getParameter("id"));
         cityDao.deleteCity(id);
+        getCities(request, response);
+    }
+
+    private void updateCity(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        Long id = Long.parseLong(request.getParameter("id"));
+        // todo вынести отдельно, когда появятся проверки
+        String name = request.getParameter("name");
+        Integer x = new Integer(request.getParameter("x"));
+        Long y = new Long(request.getParameter("y"));
+        float area = Float.parseFloat(request.getParameter("area"));
+        int population = Integer.parseInt(request.getParameter("population"));
+        int metersAboveSeaLevel = Integer.parseInt(request.getParameter("metersAboveSeaLevel"));
+        Double timezone = new Double(request.getParameter("timezone"));
+        Government government = Government.valueOf(request.getParameter("government"));
+        StandardOfLiving standardOfLiving = StandardOfLiving.valueOf(request.getParameter("standardOfLiving"));
+        double height = Double.parseDouble(request.getParameter("height"));
+        String birthdayDateStr =  request.getParameter("birthday-date"); //1986-04-08
+        String birthdayTimeStr=  request.getParameter("birthday-time"); //12:30
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime birthday = LocalDateTime.parse(birthdayDateStr + " "+ birthdayTimeStr, formatter);
+        Coordinates newCoordinates = new Coordinates(x,y);
+        Human governor = new Human(height, birthday);
+        coordinatesDAO.addCoordinates(newCoordinates);
+        humanDAO.addHuman(governor);
+        City updatedCity = new City(id, name, newCoordinates, ZonedDateTime.now(), area, population, metersAboveSeaLevel, timezone, government, standardOfLiving, governor);
+        cityDao.updateCity(updatedCity);
         getCities(request, response);
     }
 }

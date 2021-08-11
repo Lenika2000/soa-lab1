@@ -1,6 +1,5 @@
 package dao;
 
-import model.City;
 import model.Coordinates;
 import org.hibernate.Session;
 import org.hibernate.Transaction;

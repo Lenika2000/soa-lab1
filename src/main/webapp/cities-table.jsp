@@ -1,11 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <html>
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="css/table_style.css">
 </head>
 <body>
 
@@ -34,7 +33,7 @@
                 <td>${city.name}</td>
                 <td>${city.coordinates.x}</td>
                 <td>${city.coordinates.y}</td>
-                <td>${city.creationDate}</td>
+                <td>${city.creationDate.format( DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))}</td>
                 <td>${city.area}</td>
                 <td>${city.population}</td>
                 <td>${city.metersAboveSeaLevel}</td>
@@ -42,7 +41,7 @@
                 <td>${city.government}</td>
                 <td>${city.standardOfLiving}</td>
                 <td>${city.governor.height}</td>
-                <td>${city.governor.birthday}</td>
+                <td>${city.governor.birthday.format( DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))}</td>
 
                 <td>
                     <a href="edit?id=${city.id}">Edit</a>
