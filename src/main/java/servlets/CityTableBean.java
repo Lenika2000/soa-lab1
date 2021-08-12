@@ -47,6 +47,12 @@ public class CityTableBean extends HttpServlet {
                 case "/update":
                     updateCity(request, response);
                     break;
+                case "/showGetByIdForm":
+                    showGetByIdForm(request, response);
+                    break;
+                case "/get":
+                    getCityById(request, response);
+                    break;
                 default:
                     getCities(request, response);
                     break;
@@ -76,7 +82,12 @@ public class CityTableBean extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("city-form.jsp");
         request.setAttribute("city", existingCity);
         dispatcher.forward(request, response);
+    }
 
+    private void showGetByIdForm(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("get-by-id.jsp");
+        dispatcher.forward(request, response);
     }
 
     private void addCity(HttpServletRequest request, HttpServletResponse response)
@@ -103,6 +114,17 @@ public class CityTableBean extends HttpServlet {
         cityDao.addCity(newCity);
         // если все прошло удачно
         getCities(request, response);
+    }
+
+    private void getCityById(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long id = Long.parseLong(request.getParameter("id"));
+        City city = cityDao.getCityById(id);
+        if (city != null) {
+            request.setAttribute("city", city);
+        } else {
+            request.setAttribute("msg", "Not found city with id="+id);
+        }
+        showGetByIdForm(request, response);
     }
 
     private void deleteCity(HttpServletRequest request, HttpServletResponse response)

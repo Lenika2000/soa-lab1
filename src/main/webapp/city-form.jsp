@@ -7,6 +7,7 @@
     <title>Cities</title>
 </head>
 <body>
+<jsp:include page="menu.jsp"/>
 <section>
     <caption>
         <h2>

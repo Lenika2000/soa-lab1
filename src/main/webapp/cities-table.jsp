@@ -7,7 +7,7 @@
     <meta charset="utf-8">
 </head>
 <body>
-
+<jsp:include page="menu.jsp"/>
 <div align="center">
     <table border="1" cellpadding="13">
         <caption><h2>List of Cities</h2></caption>
