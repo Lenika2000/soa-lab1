@@ -8,9 +8,11 @@
 </head>
 <body>
 <jsp:include page="menu.jsp"/>
+<jsp:include page="filter.jsp"/>
 <div align="center">
-    <table border="1" cellpadding="13">
-        <caption><h2>List of Cities</h2></caption>
+    <caption><h2>List of Cities</h2></caption>
+    <table border="1" cellpadding="13" class="table">
+        <thead class="thead-dark">
         <tr>
             <th>ID</th>
             <th>Name</th>
@@ -25,8 +27,8 @@
             <th>standardOfLiving</th>
             <th>height</th>
             <th>birthday</th>
-
         </tr>
+        </thead>
         <c:forEach var="city" items="${cities}">
             <tr>
                 <td>${city.id}</td>

@@ -3,6 +3,8 @@ import dao.CityDao;
 import dao.CoordinatesDao;
 import dao.HumanDao;
 import model.*;
+import util.CheckParams;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,11 +12,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/")
 public class CityTableBean extends HttpServlet {
@@ -29,7 +32,7 @@ public class CityTableBean extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException {
         String action = request.getServletPath();
-        System.out.print(action);
+        System.out.println(action);
         try {
             switch (action) {
                 case "/new":
@@ -53,6 +56,9 @@ public class CityTableBean extends HttpServlet {
                 case "/get":
                     getCityById(request, response);
                     break;
+                case "/filter":
+                    filterCities(request, response);
+                    break;
                 default:
                     getCities(request, response);
                     break;
@@ -65,13 +71,13 @@ public class CityTableBean extends HttpServlet {
     public void getCities(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<City> cities = cityDao.getAllCities();
         request.setAttribute("cities", cities);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("cities-table.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/cities-table.jsp");
         dispatcher.forward(request, response);
     }
 
     private void showNewForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("city-form.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/city-form.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -79,14 +85,14 @@ public class CityTableBean extends HttpServlet {
             throws ServletException, IOException {
         Long id = Long.parseLong(request.getParameter("id"));
         City existingCity = cityDao.getCityById(id);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("city-form.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/city-form.jsp");
         request.setAttribute("city", existingCity);
         dispatcher.forward(request, response);
     }
 
     private void showGetByIdForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("get-by-id.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/get-by-id.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -159,5 +165,18 @@ public class CityTableBean extends HttpServlet {
         City updatedCity = new City(id, name, newCoordinates, ZonedDateTime.now(), area, population, metersAboveSeaLevel, timezone, government, standardOfLiving, governor);
         cityDao.updateCity(updatedCity);
         getCities(request, response);
+    }
+
+    private void filterCities(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Map<String,String[]> queryMap = request.getParameterMap();
+        // checkboxes
+        List<City> filteredCities = cityDao.getFilteredCities(queryMap);
+        request.setAttribute("cities", filteredCities);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/cities-table.jsp");
+        dispatcher.forward(request, response);
+//        String[] government = request.getParameterValues("government");
+//        for (int i = 0; i < government.length; i++) {
+//            System.out.println(government[i]);
+//        }
     }
 }

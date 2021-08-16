@@ -1,0 +1,9 @@
+.filter-form {
+    width: 50%;
+    margin: 0 auto;
+}
+
+.filter-form__range {
+    display: flex;
+    flex-direction: row;
+}
