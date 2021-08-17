@@ -19,7 +19,9 @@ public class City implements Serializable {
     private int population; //Значение поля должно быть больше 0
     private int metersAboveSeaLevel;
     private Double timezone; //Значение поля должно быть больше -13, Максимальное значение поля: 15
+    @Enumerated(EnumType.STRING)
     private Government government; //Поле не может быть null
+    @Enumerated(EnumType.STRING)
     private StandardOfLiving standardOfLiving; //Поле может быть null
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn

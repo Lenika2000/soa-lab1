@@ -3,7 +3,7 @@ import dao.CityDao;
 import dao.CoordinatesDao;
 import dao.HumanDao;
 import model.*;
-import util.CheckParams;
+import util.DateBuilder;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,8 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -108,10 +106,8 @@ public class CityTableBean extends HttpServlet {
         Government government = Government.valueOf(request.getParameter("government"));
         StandardOfLiving standardOfLiving = StandardOfLiving.valueOf(request.getParameter("standardOfLiving"));
         double height = Double.parseDouble(request.getParameter("height"));
-        String birthdayDateStr =  request.getParameter("birthday-date"); //1986-04-08
-        String birthdayTimeStr=  request.getParameter("birthday-time"); //12:30
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime birthday = LocalDateTime.parse(birthdayDateStr + " "+ birthdayTimeStr, formatter);
+        LocalDateTime birthday = DateBuilder.getLocalDateFromDateAndTime(request.getParameter("birthday-date"), request.getParameter("birthday-time"));
+
         Coordinates newCoordinates = new Coordinates(x,y);
         Human governor = new Human(height, birthday);
         coordinatesDAO.addCoordinates(newCoordinates);
@@ -154,10 +150,7 @@ public class CityTableBean extends HttpServlet {
         Government government = Government.valueOf(request.getParameter("government"));
         StandardOfLiving standardOfLiving = StandardOfLiving.valueOf(request.getParameter("standardOfLiving"));
         double height = Double.parseDouble(request.getParameter("height"));
-        String birthdayDateStr =  request.getParameter("birthday-date"); //1986-04-08
-        String birthdayTimeStr=  request.getParameter("birthday-time"); //12:30
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime birthday = LocalDateTime.parse(birthdayDateStr + " "+ birthdayTimeStr, formatter);
+        LocalDateTime birthday = DateBuilder.getLocalDateFromDateAndTime(request.getParameter("birthday-date"), request.getParameter("birthday-time"));
         Coordinates newCoordinates = new Coordinates(x,y);
         Human governor = new Human(height, birthday);
         coordinatesDAO.addCoordinates(newCoordinates);
@@ -169,14 +162,9 @@ public class CityTableBean extends HttpServlet {
 
     private void filterCities(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String,String[]> queryMap = request.getParameterMap();
-        // checkboxes
         List<City> filteredCities = cityDao.getFilteredCities(queryMap);
         request.setAttribute("cities", filteredCities);
         RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/cities-table.jsp");
         dispatcher.forward(request, response);
-//        String[] government = request.getParameterValues("government");
-//        for (int i = 0; i < government.length; i++) {
-//            System.out.println(government[i]);
-//        }
     }
 }

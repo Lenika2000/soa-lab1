@@ -127,7 +127,7 @@
                                                                                                         class="form-control Birthday" disabled>
     </div>
 
-    <p><input type="submit" name="filter" value="submit" class="btn btn-primary"/></p>
+    <p><input type="submit" class="btn btn-primary"/></p>
 </form>
 <script>
     <%@ include file="/js/filter.js" %>
