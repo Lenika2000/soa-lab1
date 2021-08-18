@@ -13,7 +13,9 @@
     <title>GetByID</title>
 </head>
 <body>
-<jsp:include page="menu.jsp"/>
+<jsp:include page="menu.jsp">
+    <jsp:param name="id" value="active" />
+</jsp:include>
 <form align="center" action="get" method="get">
     <caption><h2>Get city by id</h2></caption>
     <input type="text" name="id"/>

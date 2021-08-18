@@ -9,13 +9,24 @@
 <html>
 <head>
     <title></title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="http://code.jquery.com/jquery-2.2.4.js"
-            type="text/javascript"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <a href="/lab1">City List</a>
-    <a href="new">New City</a>
-    <a href="showGetByIdForm">Get City by id</a>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <ul class="navbar-nav">
+        <li class="nav-item ${param.list}">
+            <a class="nav-link" href="/lab1">City List</a>
+        </li>
+        <li class="nav-item ${param.new}">
+            <a class="nav-link" href="new">New City</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link ${param.id}" href="showGetByIdForm">Get City by id</a>
+        </li>
+    </ul>
+</nav>
 </body>
 </html>

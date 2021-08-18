@@ -1,6 +1,21 @@
 .filter-form {
-    width: 50%;
-    margin: 0 auto;
+}
+
+.filter-btn {
+    display: flex;
+    margin: 20px 0 0 auto;
+}
+
+.filter-tabs {
+    margin: 10px 0;
+}
+
+.filter-tabs a {
+    padding: 8px;
+}
+
+p {
+    margin: 0;
 }
 
 .filter-form__range {

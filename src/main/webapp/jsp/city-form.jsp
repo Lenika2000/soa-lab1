@@ -7,7 +7,9 @@
     <title>Cities</title>
 </head>
 <body>
-<jsp:include page="menu.jsp"/>
+<jsp:include page="menu.jsp">
+    <jsp:param name="new" value="active" />
+</jsp:include>
 <section>
     <caption>
         <h2>

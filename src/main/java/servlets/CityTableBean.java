@@ -69,7 +69,7 @@ public class CityTableBean extends HttpServlet {
     public void getCities(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<City> cities = cityDao.getAllCities();
         request.setAttribute("cities", cities);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/cities-table.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/main-page.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -164,7 +164,7 @@ public class CityTableBean extends HttpServlet {
         Map<String,String[]> queryMap = request.getParameterMap();
         List<City> filteredCities = cityDao.getFilteredCities(queryMap);
         request.setAttribute("cities", filteredCities);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/cities-table.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/main-page.jsp");
         dispatcher.forward(request, response);
     }
 }
