@@ -10,7 +10,10 @@
 <jsp:include page="menu.jsp">
     <jsp:param name="new" value="active" />
 </jsp:include>
-<section>
+<style>
+    <%@ include file="/css/form.css" %>
+</style>
+<div class="city-form">
     <caption>
         <h2>
             <c:if test="${city != null}">
@@ -22,36 +25,36 @@
         </h2>
     </caption>
     <c:if test="${city != null}">
-    <form action="update" method="get"></c:if>
+    <form action="update" method="get" align="center"></c:if>
         <c:if test="${city == null}">
-        <form action="insert" method="get"></c:if>
+        <form action="insert" method="get" align="center"></c:if>
             <c:if test="${city != null}">
-                <input type="hidden" name="id" value="<c:out value='${city.id}' />"/>
+                <input type="hidden" name="id" value="<c:out value='${city.id}' />" class="form-control"/>
             </c:if>
             <p>Name:
-                <input type="text" name="name" value="<c:out value='${city.name}' />"/></p>
+                <input type="text" name="name" value="<c:out value='${city.name}' />" class="form-control"/> </p>
 
             <p>X:
-                <input type="text" name="x" value="<c:out value='${city.coordinates.x}' />"/></p>
+                <input type="text" name="x" value="<c:out value='${city.coordinates.x}' />" class="form-control"/></p>
 
             <p>Y:
-                <input type="text" name="y" value="<c:out value='${city.coordinates.y}' />"/></p>
+                <input type="text" name="y" value="<c:out value='${city.coordinates.y}' />" class="form-control"/></p>
 
             <p>Area:
-                <input type="text" name="area" value="<c:out value='${city.area}' />"/></p>
+                <input type="text" name="area" value="<c:out value='${city.area}' />" class="form-control"/></p>
 
             <p>Population:
-                <input type="text" name="population" value="<c:out value='${city.population}' />"/></p>
+                <input type="text" name="population" value="<c:out value='${city.population}' />" class="form-control"/></p>
 
             <p>Meters above sea level:
-                <input type="text" name="metersAboveSeaLevel" value="<c:out value='${city.metersAboveSeaLevel}' />"/>
+                <input type="text" name="metersAboveSeaLevel" value="<c:out value='${city.metersAboveSeaLevel}' />" class="form-control"/>
             </p>
 
             <p>Timezone:
-                <input type="text" name="timezone" value="<c:out value='${city.timezone}' />"/></p>
+                <input type="text" name="timezone" value="<c:out value='${city.timezone}' />" class="form-control"/></p>
 
             <p>Government:
-                <select name="government" value="<c:out value='${city.government}' />">
+                <select name="government" value="<c:out value='${city.government}' />" class="form-control">
                     <option value="CORPORATOCRACY">CORPORATOCRACY</option>
                     <option value="PUPPET_STATE">PUPPET_STATE</option>
                     <option value="NOOCRACY">NOOCRACY</option>
@@ -59,7 +62,7 @@
                 </select></p>
 
             <p>Standard of living:
-                <select name="standardOfLiving" value="<c:out value='${city.standardOfLiving}' />">
+                <select name="standardOfLiving" value="<c:out value='${city.standardOfLiving}' />" class="form-control">
                     <option value="ULTRA_HIGH">ULTRA_HIGH</option>
                     <option value="HIGH">HIGH</option>
                     <option value="MEDIUM">MEDIUM</option>
@@ -67,14 +70,15 @@
                 </select></p>
 
             <p>Governor: </p>
-            <p>Height: <input type="text" name="height" value="<c:out value='${city.governor.height}' />"/></p>
+            <p>Height: <input type="text" name="height" value="<c:out value='${city.governor.height}' />" class="form-control"/></p>
             <p>Birthday:</p>
             <p>Date: <input type="date" name="birthday-date"
-                            value='${city.governor.birthday.format( DateTimeFormatter.ofPattern("yyyy-MM-dd"))}'></p>
+                            value='${city.governor.birthday.format( DateTimeFormatter.ofPattern("yyyy-MM-dd"))}' class="form-control"></p>
             <p>Time: <input type="time" name="birthday-time"
-                            value='${city.governor.birthday.format(DateTimeFormatter.ofPattern("HH:mm"))}' required></p>
+                            value='${city.governor.birthday.format(DateTimeFormatter.ofPattern("HH:mm"))}' required class="form-control"></p>
 
-            <p><input type="submit" name="submit" value="submit"/></p>
+            <input type="submit" class="btn btn-primary mx-auto mt-2"/>
         </form>
+</div>
 </body>
 </html>

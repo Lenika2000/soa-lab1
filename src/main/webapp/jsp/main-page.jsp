@@ -35,7 +35,7 @@
             </tr>
             </thead>
             <c:forEach var="city" items="${cities}">
-                <tr>
+                <tr class="table-rows">
                     <td>${city.id}</td>
                     <td>${city.name}</td>
                     <td>${city.coordinates.x}</td>

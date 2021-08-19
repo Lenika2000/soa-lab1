@@ -4,6 +4,7 @@ import dao.CoordinatesDao;
 import dao.HumanDao;
 import model.*;
 import util.DateBuilder;
+import util.Jaxb;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.Map;
 public class CityTableBean extends HttpServlet {
 
     private CityDao cityDao = new CityDao();
+    private Cities cities = new Cities();
     private CoordinatesDao coordinatesDAO = new CoordinatesDao();
     private HumanDao humanDAO = new HumanDao();
 
@@ -57,6 +60,9 @@ public class CityTableBean extends HttpServlet {
                 case "/filter":
                     filterCities(request, response);
                     break;
+                case "/filterByName":
+                    filterCitiesByName(request, response);
+                    break;
                 default:
                     getCities(request, response);
                     break;
@@ -64,6 +70,48 @@ public class CityTableBean extends HttpServlet {
         } catch (Exception ex) {
             throw new ServletException(ex);
         }
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException {
+        String action = request.getServletPath();
+        System.out.println(action);
+//        try {
+//            switch (action) {
+//                case "/new":
+//                    showNewForm(request, response);
+//                    break;
+//                case "/insert":
+//                    addCity(request, response);
+//                    break;
+//                case "/delete":
+//                    deleteCity(request, response);
+//                    break;
+//                case "/edit":
+//                    showEditForm(request, response);
+//                    break;
+//                case "/update":
+//                    updateCity(request, response);
+//                    break;
+//                case "/showGetByIdForm":
+//                    showGetByIdForm(request, response);
+//                    break;
+//                case "/get":
+//                    getCityById(request, response);
+//                    break;
+//                case "/filter":
+//                    filterCities(request, response);
+//                    break;
+//                case "/filterByName":
+//                    filterCitiesByName(request, response);
+//                    break;
+//                default:
+//                    getCities(request, response);
+//                    break;
+//            }
+//        } catch (Exception ex) {
+//            throw new ServletException(ex);
+//        }
     }
 
     public void getCities(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -163,8 +211,15 @@ public class CityTableBean extends HttpServlet {
     private void filterCities(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String,String[]> queryMap = request.getParameterMap();
         List<City> filteredCities = cityDao.getFilteredCities(queryMap);
-        request.setAttribute("cities", filteredCities);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/main-page.jsp");
-        dispatcher.forward(request, response);
+        response.setContentType("text/xml");
+        response.setCharacterEncoding("UTF-8");
+        cities.setCities(filteredCities);
+        try (PrintWriter out = response.getWriter()) {
+            out.print(Jaxb.jaxbObjectToXML(cities));
+        }
+    }
+
+    private void filterCitiesByName(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        filterCities(request, response);
     }
 }

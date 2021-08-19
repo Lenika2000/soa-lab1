@@ -1,0 +1,13 @@
+.city-form {
+    margin: 0 auto;
+    width: 40%;
+}
+
+.city-form p {
+    text-align: initial;
+}
+
+.city-form h2 {
+    text-align: center;
+    margin-top: 20px;
+}

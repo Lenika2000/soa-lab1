@@ -33,7 +33,7 @@
 </ul>
 <div class="tab-content">
     <div class="tab-pane fade show active" id="filter">
-        <form action="filter" method="get" class="filter-form">
+        <form action="filter" method="get" class="filter-form" name="filterForm">
             <p> <input class="form-check-input isNameDisabled" type="checkbox" > Name:
                 <input type="text" name="name" class="form-control Name" disabled/></p>
 
@@ -150,7 +150,10 @@
         Sort...
     </div>
     <div class="tab-pane fade" id="name">
-        Filter By Name...
+        <form action="filterByName" method="get" class="filter-form">
+            <p> Name: <input type="text" name="name" class="form-control"/></p>
+            <input type="submit" class="btn btn-primary filter-btn"/>
+        </form>
     </div>
     <div class="tab-pane fade" id="metersAboutSeaLevel">
         MetersAboutSeaLevel...

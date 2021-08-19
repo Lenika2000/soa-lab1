@@ -16,15 +16,21 @@
 <jsp:include page="menu.jsp">
     <jsp:param name="id" value="active" />
 </jsp:include>
-<form align="center" action="get" method="get">
+<form align="center" action="get" method="get" style="margin-top: 20px">
     <caption><h2>Get city by id</h2></caption>
-    <input type="text" name="id"/>
-    <p><input type="submit" name="get"/></p>
+    <input class="form-control mt-3" type="text" name="id" style="width: 30%; margin: 0 auto;"/>
+    <c:if test="${city == null && msg != null}">
+        <div class="mx-auto" style="color: red">
+            <h7>${msg}</h7>
+        </div>
+    </c:if>
+    <input type="submit" name="get" class="btn btn-primary mx-auto mt-3"/>
 </form>
 <c:if test="${city != null}">
-    <div align="center">
-        <table border="1" cellpadding="13">
-            <caption><h2>City with id ${city.id}</h2></caption>
+    <div align="center" class="mx-5">
+        <caption><h2>City with id ${city.id}</h2></caption>
+        <table border="1" cellpadding="13" class="table">
+            <thead class="thead-dark">
             <tr>
                 <th>Name</th>
                 <th>X</th>
@@ -39,6 +45,7 @@
                 <th>height</th>
                 <th>birthday</th>
             </tr>
+            </thead>
             <tr>
                 <td>${city.name}</td>
                 <td>${city.coordinates.x}</td>
@@ -55,9 +62,6 @@
             </tr>
         </table>
     </div>
-</c:if>
-<c:if test="${city == null && msg != null}">
-    <p>${msg}</p>
 </c:if>
 </body>
 </html>
