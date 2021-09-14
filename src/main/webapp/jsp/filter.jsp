@@ -156,7 +156,15 @@
         </form>
     </div>
     <div class="tab-pane fade" id="metersAboutSeaLevel">
-        MetersAboutSeaLevel...
+        <form action="findCitiesMetersAboveSeaLevelMore" method="get" class="filter-form" name="findCitiesMetersAboveSeaLevelMore">
+            <p> Get cities with MetersAboveSeaLevel more than </p>
+            <p> <input type="text" name="metersAboveSeaLevel" class="form-control"/></p>
+            <input type="submit" class="btn btn-primary name-filter-btn"/>
+        </form>
+        <form action="getUniqueValuesOfMetersAboveSeaLevel" method="get" class="filter-form uniqueValuesOfMetersAboveSeaLevel" name="getUniqueValuesOfMetersAboveSeaLevel">
+            <p> Get unique values of MetersAboveSeeLevel: </p>
+            <input type="submit" class="btn btn-primary name-filter-btn"/>
+        </form>
     </div>
 </div>
 <script>

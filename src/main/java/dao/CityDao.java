@@ -3,6 +3,7 @@ package dao;
 import model.City;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import util.DateBuilder;
 import util.HibernateUtil;
 
@@ -180,5 +181,41 @@ public class CityDao {
         }
         return cities;
     }
+
+    public List<City> findCitiesMetersAboveSeeLevelMore(int metersAboveSeaLevel) {
+        Transaction transaction = null;
+        List<City> cities = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            Query<City> query = session.createQuery("from City c where c.metersAboveSeaLevel > :metersAboveSeaLevel");
+            query.setParameter("metersAboveSeaLevel", metersAboveSeaLevel);
+            cities = query.getResultList();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return cities;
+    }
+
+    public List<Integer> getUniqueMetersAboveSeeLevel() {
+        Transaction transaction = null;
+        List<Integer> metersAboveSeeLevel = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            Query<Integer> query = session.createQuery("SELECT DISTINCT metersAboveSeaLevel FROM  City");
+            metersAboveSeeLevel = query.getResultList();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return metersAboveSeeLevel;
+    }
+
 
 }

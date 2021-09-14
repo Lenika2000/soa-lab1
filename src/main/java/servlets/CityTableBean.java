@@ -6,8 +6,6 @@ import model.*;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 import util.DateBuilder;
-import util.Jaxb;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,6 +26,7 @@ public class CityTableBean extends HttpServlet {
 
     private CityDao cityDao = new CityDao();
     private Cities cities = new Cities();
+    private MetersAboveSeaLevel metersAboveSeaLevel = new MetersAboveSeaLevel();
     private CoordinatesDao coordinatesDAO = new CoordinatesDao();
     private HumanDao humanDAO = new HumanDao();
 
@@ -66,6 +65,12 @@ public class CityTableBean extends HttpServlet {
                     break;
                 case "/filterByName":
                     filterCitiesByName(request, response);
+                    break;
+                case "/findCitiesMetersAboveSeaLevelMore":
+                    filterCitiesByMetersAboveSeaLevel(request, response);
+                    break;
+                case  "/getUniqueValuesOfMetersAboveSeaLevel" :
+                    getUniqueMetersAboveSeeLevel(request, response);
                     break;
                 default:
                     getCities(request, response);
@@ -231,5 +236,38 @@ public class CityTableBean extends HttpServlet {
 
     private void filterCitiesByName(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         filterCities(request, response);
+    }
+
+    private void filterCitiesByMetersAboveSeaLevel(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int metersAboveSeaLevel = Integer.parseInt(request.getParameter("metersAboveSeaLevel"));
+        List<City> filteredCities = cityDao.findCitiesMetersAboveSeeLevelMore(metersAboveSeaLevel);
+        response.setContentType("text/xml");
+        response.setCharacterEncoding("UTF-8");
+        cities.setCities(filteredCities);
+        try (PrintWriter out = response.getWriter()) {
+            Writer writer = new StringWriter();
+            response.setStatus(200);
+            Serializer serializer = new Persister();
+            serializer.write(cities, writer);
+            String xml = writer.toString();
+            out.print(xml);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getUniqueMetersAboveSeeLevel(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Integer> uniqueMetersAboveSeeLevel = cityDao.getUniqueMetersAboveSeeLevel();
+        metersAboveSeaLevel.setMeters(uniqueMetersAboveSeeLevel);
+        try (PrintWriter out = response.getWriter()) {
+            Writer writer = new StringWriter();
+            response.setStatus(200);
+            Serializer serializer = new Persister();
+            serializer.write(metersAboveSeaLevel, writer);
+            String xml = writer.toString();
+            out.print(xml);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

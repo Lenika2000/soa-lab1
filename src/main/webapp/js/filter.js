@@ -20,7 +20,6 @@ function parseDate(date, time) {
     return year + "-" + month + "-" + day + " " + hours + ":" + min;
 }
 
-// todo вынести в отдельную функцию
 function filterListener(form, url, ev) {
     let formData = new FormData(form);
     let request = new XMLHttpRequest();
@@ -100,3 +99,37 @@ filterByName.addEventListener('submit',
         filterListener(filterByName, '/lab1/filterByName', ev);
     }, false);
 
+const filterByMetersAboveSeaLevel = document.forms.namedItem("findCitiesMetersAboveSeaLevelMore");
+filterByMetersAboveSeaLevel.addEventListener('submit',
+    function (ev) {
+        filterListener(filterByMetersAboveSeaLevel, '/lab1/findCitiesMetersAboveSeaLevelMore', ev);
+    }, false);
+
+const getUniqueValuesOfMetersAboveSeaLevel = document.forms.namedItem("getUniqueValuesOfMetersAboveSeaLevel");
+getUniqueValuesOfMetersAboveSeaLevel.addEventListener('submit',
+    function (ev) {
+        let formData = new FormData(getUniqueValuesOfMetersAboveSeaLevel);
+        let request = new XMLHttpRequest();
+        request.responseType = 'document';
+        request.open("GET", "/lab1/getUniqueValuesOfMetersAboveSeaLevel");
+
+        request.onload = function (oEvent) {
+            if (request.status === 200) {
+                let metersAboveSeaLevel = [];
+                let rawData = request.response.getElementsByTagName("metersAboveSeaLevel")[0].getElementsByTagName("meters")[0];
+                for (i = 0; i < rawData.children.length; i++) {
+                    metersAboveSeaLevel[i] = rawData.children[i].textContent;
+                }
+                $('.metersAboveSeaLevel').remove();
+                let html;
+                for (i = 0; i < metersAboveSeaLevel.length; i++) {
+                    html += "<tr class='metersAboveSeaLevel'><td>" + metersAboveSeaLevel[i] + "</td></tr>";
+                }
+                $('.uniqueValuesOfMetersAboveSeaLevel').append(html);
+            } else {
+                console.log("Error " + request.status + " occurred when trying to upload your file");
+            }
+        };
+        request.send(formData);
+        ev.preventDefault();
+    }, false);
