@@ -3,6 +3,8 @@ import dao.CityDao;
 import dao.CoordinatesDao;
 import dao.HumanDao;
 import model.*;
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
 import util.DateBuilder;
 import util.Jaxb;
 
@@ -14,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -215,7 +219,13 @@ public class CityTableBean extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         cities.setCities(filteredCities);
         try (PrintWriter out = response.getWriter()) {
-            out.print(Jaxb.jaxbObjectToXML(cities));
+            Writer writer = new StringWriter();
+            Serializer serializer = new Persister();
+            serializer.write(cities, writer);
+            String xml = writer.toString();
+            out.print(xml);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -1,34 +1,43 @@
 package model;
 
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
+
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
-@XmlRootElement(name = "city")
-@XmlAccessorType(XmlAccessType.FIELD)
+@Root
 @Entity
 @Table
 public class City implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Element
     private Long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
+    @Element
     private String name; //Поле не может быть null, Строка не может быть пустой
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn
+    @Element
     private Coordinates coordinates; //Поле не может быть null
+    @Element
     private ZonedDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
+    @Element
     private float area; //Значение поля должно быть больше 0
+    @Element
     private int population; //Значение поля должно быть больше 0
+    @Element
     private int metersAboveSeaLevel;
+    @Element
     private Double timezone; //Значение поля должно быть больше -13, Максимальное значение поля: 15
+    @Element
     @Enumerated(EnumType.STRING)
     private Government government; //Поле не может быть null
+    @Element
     @Enumerated(EnumType.STRING)
     private StandardOfLiving standardOfLiving; //Поле может быть null
+    @Element
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn
     private Human governor; //Поле может быть null

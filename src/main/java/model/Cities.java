@@ -1,15 +1,10 @@
 package model;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import org.simpleframework.xml.ElementList;
 import java.util.List;
 
-@XmlRootElement(name = "cities")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class Cities {
-    @XmlElement(name = "city")
+    @ElementList
     private List<City> cities = null;
 
     public List<City> getCities() {

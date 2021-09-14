@@ -1,7 +1,7 @@
 .filter-form {
 }
 
-.filter-btn {
+.filter-btn, .name-filter-btn {
     display: flex;
     margin: 20px 0 0 auto;
 }

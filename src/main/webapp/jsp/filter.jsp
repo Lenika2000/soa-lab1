@@ -143,16 +143,16 @@
                                                                                                                              class="form-control Birthday" disabled>
             </div>
 
-            <input type="submit" class="btn btn-primary filter-btn"/>
+            <input type="submit" class="btn btn-primary filter-btn" id="filter-btn"/>
         </form>
     </div>
     <div class="tab-pane fade" id="sort">
         Sort...
     </div>
     <div class="tab-pane fade" id="name">
-        <form action="filterByName" method="get" class="filter-form">
+        <form action="filterByName" method="get" class="filter-form" name="filterByName">
             <p> Name: <input type="text" name="name" class="form-control"/></p>
-            <input type="submit" class="btn btn-primary filter-btn"/>
+            <input type="submit" class="btn btn-primary name-filter-btn"/>
         </form>
     </div>
     <div class="tab-pane fade" id="metersAboutSeaLevel">
