@@ -2,57 +2,36 @@ package model;
 
 import util.LocalDateTimeAdapter;
 
-import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDateTime;
 
-@Entity
-@Table
 @XmlRootElement(name = "governor")
-public class Human {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @XmlElement
-    private int id;
+public class JaxbHuman {
     @XmlElement
     private double height; //Значение поля должно быть больше 0
     @XmlElement
     @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private java.time.LocalDateTime birthday;
 
-    public Human(int id, double height, LocalDateTime birthday) {
-        this.id = id;
+    public JaxbHuman(double height, LocalDateTime birthday) {
         this.height = height;
         this.birthday = birthday;
     }
 
-    public Human() {
+    public JaxbHuman() {
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public Human toHuman() {
+        return new Human(0, height, birthday);
     }
 
     public double getHeight() {
         return height;
     }
 
-    public void setHeight(double height) {
-        this.height = height;
-    }
-
     public LocalDateTime getBirthday() {
         return birthday;
     }
-
-    public void setBirthday(LocalDateTime birthday) {
-        this.birthday = birthday;
-    }
 }
-

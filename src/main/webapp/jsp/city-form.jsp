@@ -5,6 +5,7 @@
 <html>
 <head>
     <title>Cities</title>
+    <script language="JavaScript" type="text/JavaScript" src="${pageContext.request.contextPath}/js/cityForm.js"></script>
 </head>
 <body>
 <jsp:include page="menu.jsp">
@@ -24,10 +25,12 @@
             </c:if>
         </h2>
     </caption>
+    <div class="error-msg">
+    </div>
     <c:if test="${city != null}">
     <form action="update" method="get" align="center"></c:if>
         <c:if test="${city == null}">
-        <form action="insert" method="get" align="center"></c:if>
+        <form action="insert" method="post" align="center"  name="addCityForm"></c:if>
             <c:if test="${city != null}">
                 <input type="hidden" name="id" value="<c:out value='${city.id}' />" class="form-control"/>
             </c:if>
@@ -80,5 +83,8 @@
             <input type="submit" class="btn btn-primary mx-auto mt-2"/>
         </form>
 </div>
+<script>
+    <%@ include file="/js/cityForm.js" %>
+</script>
 </body>
 </html>

@@ -1,53 +1,32 @@
 package model;
 
-import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@Entity
-@Table
-@XmlRootElement
-public class Coordinates {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private int id;
+@XmlRootElement(name = "coordinates")
+public class JaxbCoordinates {
     @XmlElement
     private Integer x; //Значение поля должно быть больше -60, Поле не может быть null
     @XmlElement
     private Long y; //Максимальное значение поля: 498, Поле не может быть null
 
-    public Coordinates() {
-
+    public JaxbCoordinates() {
     }
 
-    public Coordinates(int id, Integer x, Long y) {
-        this.id = id;
+    public Coordinates toCoordinates() {
+        return new Coordinates(0, x, y);
+    }
+
+    public JaxbCoordinates(Integer x, Long y) {
         this.x = x;
         this.y = y;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public Integer getX() {
         return x;
     }
 
-    public void setX(Integer x) {
-        this.x = x;
-    }
-
     public Long getY() {
         return y;
     }
-
-    public void setY(Long y) {
-        this.y = y;
-    }
 }
-

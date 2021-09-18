@@ -2,8 +2,11 @@ package model;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
+import util.LocalDateTimeAdapter;
+import util.ZonedDateTimeAdapter;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
@@ -17,11 +20,12 @@ public class City implements Serializable {
     private Long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     @Element
     private String name; //Поле не может быть null, Строка не может быть пустой
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn
     @Element
     private Coordinates coordinates; //Поле не может быть null
     @Element
+    @XmlJavaTypeAdapter(ZonedDateTimeAdapter.class)
     private ZonedDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
     @Element
     private float area; //Значение поля должно быть больше 0
@@ -38,7 +42,7 @@ public class City implements Serializable {
     @Enumerated(EnumType.STRING)
     private StandardOfLiving standardOfLiving; //Поле может быть null
     @Element
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn
     private Human governor; //Поле может быть null
 

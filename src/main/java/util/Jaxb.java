@@ -1,13 +1,14 @@
 package util;
 
 import model.Cities;
-import model.City;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.List;
+
 
 public class Jaxb {
     public static String jaxbObjectToXML(Cities cities)
@@ -34,6 +35,28 @@ public class Jaxb {
 
         } catch (JAXBException e) {
             e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static  <T> T fromStr(String str, Class<T> tClass) throws JAXBException {
+        JAXBContext jc = JAXBContext.newInstance(tClass);
+
+        Unmarshaller unmarshaller = jc.createUnmarshaller();
+
+        return (T) unmarshaller.unmarshal(new StringReader(str));
+    }
+
+    public <T> String toStr(T object) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(object.getClass());
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            StringWriter sw = new StringWriter();
+            marshaller.marshal(object, sw);
+            return sw.toString();
+        } catch (JAXBException ex) {
+            ex.printStackTrace();
         }
         return "";
     }

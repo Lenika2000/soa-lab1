@@ -1,31 +1,41 @@
 package servlets;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.CityDao;
 import dao.CoordinatesDao;
 import dao.HumanDao;
 import model.*;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
+import util.CityValidator;
 import util.DateBuilder;
+import util.Jaxb;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.ValidationException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static util.ServletUtil.getBody;
 
 @WebServlet("/")
 public class CityTableBean extends HttpServlet {
 
     private CityDao cityDao = new CityDao();
     private Cities cities = new Cities();
+    private CityValidator cityValidator = new CityValidator();
     private MetersAboveSeaLevel metersAboveSeaLevel = new MetersAboveSeaLevel();
     private CoordinatesDao coordinatesDAO = new CoordinatesDao();
     private HumanDao humanDAO = new HumanDao();
@@ -41,9 +51,6 @@ public class CityTableBean extends HttpServlet {
             switch (action) {
                 case "/new":
                     showNewForm(request, response);
-                    break;
-                case "/insert":
-                    addCity(request, response);
                     break;
                 case "/delete":
                     deleteCity(request, response);
@@ -82,45 +89,28 @@ public class CityTableBean extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException {
-        String action = request.getServletPath();
-        System.out.println(action);
-//        try {
-//            switch (action) {
-//                case "/new":
-//                    showNewForm(request, response);
-//                    break;
-//                case "/insert":
-//                    addCity(request, response);
-//                    break;
-//                case "/delete":
-//                    deleteCity(request, response);
-//                    break;
-//                case "/edit":
-//                    showEditForm(request, response);
-//                    break;
-//                case "/update":
-//                    updateCity(request, response);
-//                    break;
-//                case "/showGetByIdForm":
-//                    showGetByIdForm(request, response);
-//                    break;
-//                case "/get":
-//                    getCityById(request, response);
-//                    break;
-//                case "/filter":
-//                    filterCities(request, response);
-//                    break;
-//                case "/filterByName":
-//                    filterCitiesByName(request, response);
-//                    break;
-//                default:
-//                    getCities(request, response);
-//                    break;
-//            }
-//        } catch (Exception ex) {
-//            throw new ServletException(ex);
-//        }
+            throws IOException {
+        try {
+            String body = getBody(request);
+            JaxbCity city = Jaxb.fromStr(body, JaxbCity.class);
+            cityValidator.validate(city);
+            cityDao.addCity(city.toCity());
+            response.setStatus(200);
+        } catch (ValidationException e) {
+            try (PrintWriter out = response.getWriter()) {
+                Writer writer = new StringWriter();
+                response.setStatus(400);
+                Serializer serializer = new Persister();
+                serializer.write(e.getMessage(), writer);
+                String xml = writer.toString();
+                out.print(xml);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        catch (JAXBException | IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
     }
 
     public void getCities(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -149,30 +139,6 @@ public class CityTableBean extends HttpServlet {
             throws ServletException, IOException {
         RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/get-by-id.jsp");
         dispatcher.forward(request, response);
-    }
-
-    private void addCity(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-        String name = request.getParameter("name");
-        Integer x = new Integer(request.getParameter("x"));
-        Long y = new Long(request.getParameter("y"));
-        float area = Float.parseFloat(request.getParameter("area"));
-        int population = Integer.parseInt(request.getParameter("population"));
-        int metersAboveSeaLevel = Integer.parseInt(request.getParameter("metersAboveSeaLevel"));
-        Double timezone = new Double(request.getParameter("timezone"));
-        Government government = Government.valueOf(request.getParameter("government"));
-        StandardOfLiving standardOfLiving = StandardOfLiving.valueOf(request.getParameter("standardOfLiving"));
-        double height = Double.parseDouble(request.getParameter("height"));
-        LocalDateTime birthday = DateBuilder.getLocalDateFromDateAndTime(request.getParameter("birthday-date"), request.getParameter("birthday-time"));
-
-        Coordinates newCoordinates = new Coordinates(x,y);
-        Human governor = new Human(height, birthday);
-        coordinatesDAO.addCoordinates(newCoordinates);
-        humanDAO.addHuman(governor);
-        City newCity = new City(name, newCoordinates, ZonedDateTime.now(), area, population, metersAboveSeaLevel, timezone, government, standardOfLiving, governor);
-        cityDao.addCity(newCity);
-        // если все прошло удачно
-        getCities(request, response);
     }
 
     private void getCityById(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -208,8 +174,8 @@ public class CityTableBean extends HttpServlet {
         StandardOfLiving standardOfLiving = StandardOfLiving.valueOf(request.getParameter("standardOfLiving"));
         double height = Double.parseDouble(request.getParameter("height"));
         LocalDateTime birthday = DateBuilder.getLocalDateFromDateAndTime(request.getParameter("birthday-date"), request.getParameter("birthday-time"));
-        Coordinates newCoordinates = new Coordinates(x,y);
-        Human governor = new Human(height, birthday);
+        Coordinates newCoordinates = new Coordinates(0,x,y);
+        Human governor = new Human(0,height, birthday);
         coordinatesDAO.addCoordinates(newCoordinates);
         humanDAO.addHuman(governor);
         City updatedCity = new City(id, name, newCoordinates, ZonedDateTime.now(), area, population, metersAboveSeaLevel, timezone, government, standardOfLiving, governor);
@@ -217,7 +183,7 @@ public class CityTableBean extends HttpServlet {
         getCities(request, response);
     }
 
-    private void filterCities(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void filterCities(HttpServletRequest request, HttpServletResponse response) {
         Map<String,String[]> queryMap = request.getParameterMap();
         List<City> filteredCities = cityDao.getFilteredCities(queryMap);
         response.setContentType("text/xml");
@@ -225,6 +191,7 @@ public class CityTableBean extends HttpServlet {
         cities.setCities(filteredCities);
         try (PrintWriter out = response.getWriter()) {
             Writer writer = new StringWriter();
+            response.setStatus(200);
             Serializer serializer = new Persister();
             serializer.write(cities, writer);
             String xml = writer.toString();
@@ -234,11 +201,11 @@ public class CityTableBean extends HttpServlet {
         }
     }
 
-    private void filterCitiesByName(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void filterCitiesByName(HttpServletRequest request, HttpServletResponse response) {
         filterCities(request, response);
     }
 
-    private void filterCitiesByMetersAboveSeaLevel(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void filterCitiesByMetersAboveSeaLevel(HttpServletRequest request, HttpServletResponse response)  {
         int metersAboveSeaLevel = Integer.parseInt(request.getParameter("metersAboveSeaLevel"));
         List<City> filteredCities = cityDao.findCitiesMetersAboveSeeLevelMore(metersAboveSeaLevel);
         response.setContentType("text/xml");
@@ -256,7 +223,7 @@ public class CityTableBean extends HttpServlet {
         }
     }
 
-    private void getUniqueMetersAboveSeeLevel(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void getUniqueMetersAboveSeeLevel(HttpServletRequest request, HttpServletResponse response)  {
         List<Integer> uniqueMetersAboveSeeLevel = cityDao.getUniqueMetersAboveSeeLevel();
         metersAboveSeaLevel.setMeters(uniqueMetersAboveSeeLevel);
         try (PrintWriter out = response.getWriter()) {

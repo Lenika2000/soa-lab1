@@ -21,8 +21,7 @@
     <input class="form-control mt-3" type="text" name="id" style="width: 30%; margin: 0 auto;"/>
     <c:if test="${city == null && msg != null}">
         <div class="mx-auto" style="color: red">
-            <h7>${msg}</h7>
-        </div>
+            <h7>${msg}</h7>       </div>
     </c:if>
     <input type="submit" name="get" class="btn btn-primary mx-auto mt-3"/>
 </form>
