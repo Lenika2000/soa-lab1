@@ -1,5 +1,5 @@
-package util;
-import model.JaxbHuman;
+package validators;
+import model.typesForXml.JaxbHuman;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ public class HumanValidator {
         for (Field f : JaxbHuman.class.getDeclaredFields()) {
             f.setAccessible(true);
             if (f.get(human) == null) {
-                errorList.add(String.format("Human %s is not specified<br>", f.getName()));
+                errorList.add(String.format("<br>Human %s is not specified<br>", f.getName()));
             }
         }
         if (human.getHeight() <= 0) {

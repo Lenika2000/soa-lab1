@@ -1,15 +1,19 @@
 package servlets;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import dao.CityDao;
 import dao.CoordinatesDao;
 import dao.HumanDao;
 import model.*;
+import model.typesForXml.Cities;
+import model.typesForXml.JaxbCity;
+import model.typesForXml.MetersAboveSeaLevel;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
-import util.CityValidator;
+import validators.CityValidator;
 import util.DateBuilder;
 import util.Jaxb;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,9 +28,9 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static util.ServletUtil.getBody;
 
@@ -58,9 +62,6 @@ public class CityTableBean extends HttpServlet {
                 case "/edit":
                     showEditForm(request, response);
                     break;
-                case "/update":
-                    updateCity(request, response);
-                    break;
                 case "/showGetByIdForm":
                     showGetByIdForm(request, response);
                     break;
@@ -76,7 +77,7 @@ public class CityTableBean extends HttpServlet {
                 case "/findCitiesMetersAboveSeaLevelMore":
                     filterCitiesByMetersAboveSeaLevel(request, response);
                     break;
-                case  "/getUniqueValuesOfMetersAboveSeaLevel" :
+                case "/getUniqueValuesOfMetersAboveSeaLevel":
                     getUniqueMetersAboveSeeLevel(request, response);
                     break;
                 default:
@@ -96,20 +97,31 @@ public class CityTableBean extends HttpServlet {
             cityValidator.validate(city);
             cityDao.addCity(city.toCity());
             response.setStatus(200);
-        } catch (ValidationException e) {
-            try (PrintWriter out = response.getWriter()) {
-                Writer writer = new StringWriter();
-                response.setStatus(400);
-                Serializer serializer = new Persister();
-                serializer.write(e.getMessage(), writer);
-                String xml = writer.toString();
-                out.print(xml);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+        } catch (Exception e ) {
+            PrintWriter out = response.getWriter();
+            response.setStatus(400);
+            out.print(e.getMessage());
         }
-        catch (JAXBException | IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
+    }
+
+    public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            String body = getBody(request);
+            JaxbCity cityData = Jaxb.fromStr(body, JaxbCity.class);
+            cityValidator.validate(cityData);
+            Optional<City> cityFromBD = cityDao.getCityById(cityData.getId());
+            if (cityFromBD.isPresent()) {
+                City updatingCity = cityFromBD.get();
+                updatingCity.update(cityData);
+                cityDao.updateCity(updatingCity);
+                response.setStatus(200);
+            } else {
+                throw new EntityNotFoundException("Cannot update city");
+            }
+        } catch (Exception e ) {
+            PrintWriter out = response.getWriter();
+            response.setStatus(400);
+            out.print(e.getMessage());
         }
     }
 
@@ -129,9 +141,9 @@ public class CityTableBean extends HttpServlet {
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Long id = Long.parseLong(request.getParameter("id"));
-        City existingCity = cityDao.getCityById(id);
+        Optional<City> existingCity = cityDao.getCityById(id);
         RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/city-form.jsp");
-        request.setAttribute("city", existingCity);
+        request.setAttribute("city", existingCity.get());
         dispatcher.forward(request, response);
     }
 
@@ -143,11 +155,11 @@ public class CityTableBean extends HttpServlet {
 
     private void getCityById(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long id = Long.parseLong(request.getParameter("id"));
-        City city = cityDao.getCityById(id);
+        Optional<City> city = cityDao.getCityById(id);
         if (city != null) {
             request.setAttribute("city", city);
         } else {
-            request.setAttribute("msg", "Not found city with id="+id);
+            request.setAttribute("msg", "Not found city with id=" + id);
         }
         showGetByIdForm(request, response);
     }
@@ -159,32 +171,8 @@ public class CityTableBean extends HttpServlet {
         getCities(request, response);
     }
 
-    private void updateCity(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-        Long id = Long.parseLong(request.getParameter("id"));
-        // todo вынести отдельно, когда появятся проверки
-        String name = request.getParameter("name");
-        Integer x = new Integer(request.getParameter("x"));
-        Long y = new Long(request.getParameter("y"));
-        float area = Float.parseFloat(request.getParameter("area"));
-        int population = Integer.parseInt(request.getParameter("population"));
-        int metersAboveSeaLevel = Integer.parseInt(request.getParameter("metersAboveSeaLevel"));
-        Double timezone = new Double(request.getParameter("timezone"));
-        Government government = Government.valueOf(request.getParameter("government"));
-        StandardOfLiving standardOfLiving = StandardOfLiving.valueOf(request.getParameter("standardOfLiving"));
-        double height = Double.parseDouble(request.getParameter("height"));
-        LocalDateTime birthday = DateBuilder.getLocalDateFromDateAndTime(request.getParameter("birthday-date"), request.getParameter("birthday-time"));
-        Coordinates newCoordinates = new Coordinates(0,x,y);
-        Human governor = new Human(0,height, birthday);
-        coordinatesDAO.addCoordinates(newCoordinates);
-        humanDAO.addHuman(governor);
-        City updatedCity = new City(id, name, newCoordinates, ZonedDateTime.now(), area, population, metersAboveSeaLevel, timezone, government, standardOfLiving, governor);
-        cityDao.updateCity(updatedCity);
-        getCities(request, response);
-    }
-
     private void filterCities(HttpServletRequest request, HttpServletResponse response) {
-        Map<String,String[]> queryMap = request.getParameterMap();
+        Map<String, String[]> queryMap = request.getParameterMap();
         List<City> filteredCities = cityDao.getFilteredCities(queryMap);
         response.setContentType("text/xml");
         response.setCharacterEncoding("UTF-8");
@@ -205,7 +193,7 @@ public class CityTableBean extends HttpServlet {
         filterCities(request, response);
     }
 
-    private void filterCitiesByMetersAboveSeaLevel(HttpServletRequest request, HttpServletResponse response)  {
+    private void filterCitiesByMetersAboveSeaLevel(HttpServletRequest request, HttpServletResponse response) {
         int metersAboveSeaLevel = Integer.parseInt(request.getParameter("metersAboveSeaLevel"));
         List<City> filteredCities = cityDao.findCitiesMetersAboveSeeLevelMore(metersAboveSeaLevel);
         response.setContentType("text/xml");
@@ -223,7 +211,7 @@ public class CityTableBean extends HttpServlet {
         }
     }
 
-    private void getUniqueMetersAboveSeeLevel(HttpServletRequest request, HttpServletResponse response)  {
+    private void getUniqueMetersAboveSeeLevel(HttpServletRequest request, HttpServletResponse response) {
         List<Integer> uniqueMetersAboveSeeLevel = cityDao.getUniqueMetersAboveSeeLevel();
         metersAboveSeaLevel.setMeters(uniqueMetersAboveSeeLevel);
         try (PrintWriter out = response.getWriter()) {

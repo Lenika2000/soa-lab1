@@ -1,9 +1,10 @@
 package model;
 
+import model.typesForXml.JaxbCity;
+import model.typesForXml.JaxbHuman;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
-import util.LocalDateTimeAdapter;
-import util.ZonedDateTimeAdapter;
+import model.typesForXml.ZonedDateTimeAdapter;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -74,6 +75,18 @@ public class City implements Serializable {
     }
 
     public City() {
+    }
+
+    public void update(JaxbCity data) {
+        this.name = data.getName();
+        this.coordinates.update(data.getCoordinates());
+        this.area = data.getArea();
+        this.population = data.getPopulation();
+        this.metersAboveSeaLevel = data.getMetersAboveSeaLevel();
+        this.timezone = data.getTimezone();
+        this.government = data.getGovernment();
+        this.standardOfLiving = data.getStandardOfLiving();
+        this.governor.update(data.getGovernor());
     }
 
     public Long getId() {

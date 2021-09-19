@@ -1,6 +1,6 @@
 package util;
 
-import model.Cities;
+import model.typesForXml.Cities;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

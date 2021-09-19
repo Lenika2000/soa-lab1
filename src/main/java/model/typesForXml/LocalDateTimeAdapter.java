@@ -1,4 +1,4 @@
-package util;
+package model.typesForXml;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

@@ -1,5 +1,8 @@
 package model;
 
+import model.typesForXml.JaxbCoordinates;
+import util.Jaxb;
+
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -24,6 +27,11 @@ public class Coordinates {
         this.id = id;
         this.x = x;
         this.y = y;
+    }
+
+    public void update(JaxbCoordinates data) {
+        this.x = data.getX();
+        this.y = data.getY();
     }
 
     public int getId() {

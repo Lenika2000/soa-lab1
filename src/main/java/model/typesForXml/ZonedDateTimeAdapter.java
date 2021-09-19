@@ -1,4 +1,4 @@
-package util;
+package model.typesForXml;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.time.ZonedDateTime;

@@ -1,4 +1,4 @@
-package model;
+package model.typesForXml;
 
 import org.simpleframework.xml.ElementList;
 

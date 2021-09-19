@@ -1,5 +1,6 @@
-package model;
+package model.typesForXml;
 
+import model.City;
 import org.simpleframework.xml.ElementList;
 import java.util.List;
 

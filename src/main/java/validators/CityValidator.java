@@ -1,7 +1,8 @@
-package util;
+package validators;
 
 
-import model.JaxbCity;
+import model.typesForXml.JaxbCity;
+
 import javax.xml.bind.ValidationException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class CityValidator {
         for (Field f : JaxbCity.class.getDeclaredFields()) {
             f.setAccessible(true);
             if (f.get(city) == null) {
-                errorList.add((String.format("Cities %s is not specified", f.getName())));
+                errorList.add((String.format("<br>City %s is not specified", f.getName())));
             }
         }
         if (city.getName() != null &&city.getName().isEmpty()) {
@@ -41,7 +42,7 @@ public class CityValidator {
         errorList.addAll(humanValidator.validate(city.getGovernor()));
         errorList.addAll(coordinatesValidator.validate(city.getCoordinates()));
         if (errorList.size() > 0) {
-            throw new ValidationException(String.join(",<br> ", errorList));
+            throw new ValidationException(String.join(",", errorList));
         }
         return errorList;
     }

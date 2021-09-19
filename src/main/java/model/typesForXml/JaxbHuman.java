@@ -1,6 +1,6 @@
-package model;
+package model.typesForXml;
 
-import util.LocalDateTimeAdapter;
+import model.Human;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

@@ -1,6 +1,7 @@
 package model;
 
-import util.LocalDateTimeAdapter;
+import model.typesForXml.JaxbHuman;
+import model.typesForXml.LocalDateTimeAdapter;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
@@ -29,6 +30,11 @@ public class Human {
     }
 
     public Human() {
+    }
+
+    public void update(JaxbHuman humanData) {
+        this.birthday = humanData.getBirthday();
+        this.height = humanData.getHeight();
     }
 
     public int getId() {

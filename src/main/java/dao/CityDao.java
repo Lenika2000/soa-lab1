@@ -32,7 +32,7 @@ public class CityDao {
         return cities;
     }
 
-    public City getCityById(Long id) {
+    public Optional<City> getCityById(Long id) {
         Transaction transaction = null;
         City city = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -45,7 +45,7 @@ public class CityDao {
             }
             e.printStackTrace();
         }
-        return city;
+        return Optional.ofNullable(city);
     }
 
     public void addCity(City city) {
