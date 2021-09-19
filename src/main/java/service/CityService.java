@@ -18,9 +18,8 @@ import javax.xml.bind.ValidationException;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.IntStream;
 
 import static util.ServletUtil.getBody;
 
@@ -85,26 +84,37 @@ public class CityService {
     }
 
     public void getAllCities(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int numberOfRecordsPerPage = 5;
+        int selectedPage = 1;
         List<City> cities = cityDao.getAllCities();
-        request.setAttribute("cities", cities);
+        int citiesQuality = (int)Math. ceil( (double) (cities.size()+1) / numberOfRecordsPerPage);
+        request.setAttribute("pagesQuality", IntStream.range(1, (int)Math. ceil( citiesQuality + 1)).toArray());
+        request.setAttribute("citiesLength", cities.size());
+        int from = (selectedPage - 1) * numberOfRecordsPerPage;
+        request.setAttribute("cities", Arrays.copyOfRange(cities.toArray(), from , from + numberOfRecordsPerPage) );
         request.getRequestDispatcher("jsp/main-page.jsp").forward(request, response);
     }
 
     public void filterCities(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, String[]> queryMap = request.getParameterMap();
         List<City> filteredCities = cityDao.getFilteredCities(queryMap);
-        sendCities(response, filteredCities);
+        sendCities(request, response, filteredCities);
     }
 
     public void filterCitiesByMetersAboveSeaLevel(HttpServletRequest request, HttpServletResponse response) throws Exception {
         int metersAboveSeaLevel = Integer.parseInt(request.getParameter("metersAboveSeaLevel"));
         List<City> filteredCities = cityDao.findCitiesMetersAboveSeeLevelMore(metersAboveSeaLevel);
-        sendCities(response, filteredCities);
+        sendCities(request, response, filteredCities);
     }
 
-    private void sendCities(HttpServletResponse response, List<City> filteredCities) throws Exception {
+    private void sendCities(HttpServletRequest request, HttpServletResponse response, List<City> filteredCities) throws Exception {
+        int numberOfRecordsPerPage = Integer.parseInt(request.getParameter("numberOfRecordsPerPage"));
+        int selectedPage = Integer.parseInt(request.getParameter("selectedPage"));
+        int from = (selectedPage - 1) * numberOfRecordsPerPage;
+        int to = (from + numberOfRecordsPerPage > filteredCities.size()) ? filteredCities.size() : from + numberOfRecordsPerPage ;
+        List<City> cities = new ArrayList<>(filteredCities.subList(from , to));
         response.setContentType("text/xml");
-        citiesList.setCities(filteredCities);
+        citiesList.setCities(cities);
         response.setStatus(200);
         Writer writer = new StringWriter();
         Serializer serializer = new Persister();
@@ -129,7 +139,7 @@ public class CityService {
         String sortBy = request.getParameter("sortBy");
         String order = request.getParameter("order");
         List<City> sortedCities = cityDao.sort(sortBy, order);
-        sendCities(response, sortedCities);
+        sendCities(request, response, sortedCities);
     }
 
 }

@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
     <title>Title</title>
@@ -17,6 +18,22 @@
 </style>
 <body>
 <caption><h2>Filter</h2></caption>
+<form method="get" class="filter-form paginatorForm" name="numberOfRecordsPerPageForm">
+    <p> Items per page </p>
+    <select id="numberOfRecordsPerPage" class="form-select" name="numberOfRecordsPerPage" onchange="changePagesQuality(${citiesLength})">
+        <option selected value="5">5</option>
+        <option value="10">10</option>
+        <option value="25">25</option>
+    </select>
+    <p> Selected Page </p>
+    <div class="selectedPage"></div>
+    <select id="selectedPage" name="selectedPage">
+        <c:forEach var="item" items='${pagesQuality}'>
+            <option value="${item}">${item}</option>
+        </c:forEach>
+    </select>
+<%--    <input type="submit" class="btn btn-primary name-filter-btn"/>--%>
+</form>
 <ul class="nav nav-tabs filter-tabs" data-tabs="tabs" id="filter-tab">
     <li class="nav-item active">
         <a class="nav-link active" data-toggle="tab" href="#filter">Filter</a>

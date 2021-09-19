@@ -250,4 +250,20 @@ public class CityDao {
         }
         return cities;
     }
+
+    public int getCityQuantity() {
+        Transaction transaction = null;
+        int quantity = 0;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            quantity = session.createQuery("SELECT count(*) FROM City").getFirstResult();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return quantity;
+    }
 }

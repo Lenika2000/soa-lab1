@@ -35,6 +35,7 @@
             </tr>
             </thead>
             <c:forEach var="city" items="${cities}">
+                <c:if test="${city != null}">
                 <tr class="table-rows">
                     <td>${city.id}</td>
                     <td>${city.name}</td>
@@ -55,6 +56,7 @@
                         <button class="btn btn-primary mx-auto mt-2" onclick="deleteCity(${city.id});">Delete</button>
                     </td>
                 </tr>
+                </c:if>
             </c:forEach>
         </table>
     </div>

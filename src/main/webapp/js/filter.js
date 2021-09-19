@@ -24,7 +24,7 @@ function filterListener(form, url, ev) {
     let formData = new FormData(form);
     let request = new XMLHttpRequest();
     request.responseType = 'document';
-    let getStr = "?";
+    let getStr = "?selectedPage=" + document.getElementById("selectedPage").value + "&numberOfRecordsPerPage="+  document.getElementById("numberOfRecordsPerPage").value+ "&";
     for (let pair of formData.entries()) {
         getStr += pair[0] + '=' + pair[1] + '&';
     }
@@ -138,7 +138,7 @@ getUniqueValuesOfMetersAboveSeaLevel.addEventListener('submit',
 const sortForm = document.forms.namedItem("sortForm");
 sortForm.addEventListener('submit',
     function (ev) {
-        let url = "/lab1/sort?";
+        let url = "/lab1/sort?selectedPage=" + document.getElementById("selectedPage").value + "&numberOfRecordsPerPage="+  document.getElementById("numberOfRecordsPerPage").value+ "&";
         $('input[type=radio]').filter(':checked').each(function () {
             var inputField = $(this);
             console.log(inputField.attr('name'))
@@ -206,6 +206,18 @@ sortForm.addEventListener('submit',
         request.send();
         ev.preventDefault();
     }, false);
+
+function changePagesQuality(citiesQuality) {
+    const numberOfRecordsPerPage = document.getElementById("numberOfRecordsPerPage").value;
+    const pagesQuality = Math.ceil(citiesQuality / numberOfRecordsPerPage);
+    $('#selectedPage').remove();
+    let html = "<select id='selectedPage' name='selectedPage'>";
+    for (let i = 1; i < pagesQuality+1; i++) {
+        html+='<option value='+ i + '>'+ i + '</option>'
+    }
+    html+= "</select>"
+    $('.selectedPage').append(html);
+}
 
 function deleteCity(id) {
     let request = new XMLHttpRequest();
