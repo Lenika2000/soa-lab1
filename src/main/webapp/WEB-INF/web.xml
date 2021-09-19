@@ -10,7 +10,7 @@
   <display-name>SOA-lab1</display-name>
 <!--  <servlet>-->
 <!--    <servlet-name>CityTableBean</servlet-name>-->
-<!--    <servlet-class>servlets.CityTableBean</servlet-class>-->
+<!--    <servlet-class>servlets.CitiesServlet</servlet-class>-->
 <!--  </servlet>-->
 
 <!--  <servlet-mapping>-->

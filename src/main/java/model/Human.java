@@ -2,7 +2,6 @@ package model;
 
 import model.typesForXml.JaxbHuman;
 import model.typesForXml.LocalDateTimeAdapter;
-
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

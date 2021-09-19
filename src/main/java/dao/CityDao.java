@@ -151,8 +151,8 @@ public class CityDao {
             if (params.containsKey(paramName)) {
                 queryStr.append(" c." + paramName + " IN (");
                 String[] checkboxValues = params.get(paramName);
-                for (int i=0; i<checkboxValues.length; i++) {
-                    queryStr.append("'" + checkboxValues[i]+ "', ");
+                for (int i = 0; i < checkboxValues.length; i++) {
+                    queryStr.append("'" + checkboxValues[i] + "', ");
                 }
                 queryStr = new StringBuilder(queryStr.substring(0, queryStr.length() - 2));
                 queryStr.append(") AND");

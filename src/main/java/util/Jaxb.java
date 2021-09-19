@@ -11,10 +11,8 @@ import java.io.StringWriter;
 
 
 public class Jaxb {
-    public static String jaxbObjectToXML(Cities cities)
-    {
-        try
-        {
+    public static String jaxbObjectToXML(Cities cities) {
+        try {
             //Create JAXB Context
             JAXBContext jaxbContext = JAXBContext.newInstance(Cities.class);
 
@@ -39,26 +37,12 @@ public class Jaxb {
         return "";
     }
 
-    public static  <T> T fromStr(String str, Class<T> tClass) throws JAXBException {
+    public static <T> T fromStr(String str, Class<T> tClass) throws JAXBException {
         JAXBContext jc = JAXBContext.newInstance(tClass);
 
         Unmarshaller unmarshaller = jc.createUnmarshaller();
 
         return (T) unmarshaller.unmarshal(new StringReader(str));
-    }
-
-    public <T> String toStr(T object) {
-        try {
-            JAXBContext context = JAXBContext.newInstance(object.getClass());
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            StringWriter sw = new StringWriter();
-            marshaller.marshal(object, sw);
-            return sw.toString();
-        } catch (JAXBException ex) {
-            ex.printStackTrace();
-        }
-        return "";
     }
 }
 

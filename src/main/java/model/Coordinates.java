@@ -1,8 +1,6 @@
 package model;
 
 import model.typesForXml.JaxbCoordinates;
-import util.Jaxb;
-
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

@@ -76,7 +76,7 @@ function filterListener(form, url, ev) {
                     + "</td><td>" + filteredCities[i].standardOfLiving + "</td><td>" + filteredCities[i].governor.height
                     + "</td><td>" + filteredCities[i].governor.birthday + "</td>" +
                     "<td><a href=edit?id=" + filteredCities[i].id + ">Edit</a>" +
-                    "    <a href=delete?id=" + filteredCities[i].id + ">Delete</a></td></tr>";
+                    "    <button class='btn btn-primary mx-auto mt-2' onclick='deleteCity(${city.id});'>Delete</button></td></tr>";
             }
             $('table').append(html);
             console.log(filteredCities);

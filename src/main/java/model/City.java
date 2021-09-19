@@ -1,7 +1,6 @@
 package model;
 
 import model.typesForXml.JaxbCity;
-import model.typesForXml.JaxbHuman;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 import model.typesForXml.ZonedDateTimeAdapter;
