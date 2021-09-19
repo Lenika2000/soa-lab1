@@ -93,16 +93,16 @@ public class CityService {
     public void filterCities(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, String[]> queryMap = request.getParameterMap();
         List<City> filteredCities = cityDao.getFilteredCities(queryMap);
-        sendFilteredCities(response, filteredCities);
+        sendCities(response, filteredCities);
     }
 
     public void filterCitiesByMetersAboveSeaLevel(HttpServletRequest request, HttpServletResponse response) throws Exception {
         int metersAboveSeaLevel = Integer.parseInt(request.getParameter("metersAboveSeaLevel"));
         List<City> filteredCities = cityDao.findCitiesMetersAboveSeeLevelMore(metersAboveSeaLevel);
-        sendFilteredCities(response, filteredCities);
+        sendCities(response, filteredCities);
     }
 
-    private void sendFilteredCities(HttpServletResponse response, List<City> filteredCities) throws Exception {
+    private void sendCities(HttpServletResponse response, List<City> filteredCities) throws Exception {
         response.setContentType("text/xml");
         citiesList.setCities(filteredCities);
         response.setStatus(200);
@@ -123,6 +123,13 @@ public class CityService {
         serializer.write(metersAboveSeaLevelList, writer);
         String xml = writer.toString();
         response.getWriter().print(xml);
+    }
+
+    public void sort(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String sortBy = request.getParameter("sortBy");
+        String order = request.getParameter("order");
+        List<City> sortedCities = cityDao.sort(sortBy, order);
+        sendCities(response, sortedCities);
     }
 
 }

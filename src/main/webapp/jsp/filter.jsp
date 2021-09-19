@@ -147,19 +147,25 @@
         </form>
     </div>
     <div class="tab-pane fade" id="sort">
-        <form action="sort" method="get" class="filter-form" name="sort">
-            <input type="radio" class="form-check-input" name="sort" value="id">  id<BR>
-            <input type="radio" class="form-check-input" name="sort" value="name">  name<BR>
-            <input type="radio" class="form-check-input" name="sort" value="x">  x<BR>
-            <input type="radio" class="form-check-input" name="sort" value="y">  y<BR>
-            <input type="radio" class="form-check-input" name="sort" value="creation-date">  creation-date<BR>
-            <input type="radio" class="form-check-input" name="sort" value="area">  area<BR>
-            <input type="radio" class="form-check-input" name="sort" value="population">  population<BR>
-            <input type="radio" class="form-check-input" name="sort" value="metersAboveSeaLevel">  metersAboveSeaLevel<BR>
-            <input type="radio" class="form-check-input" name="sort" value="timezone">  timezone<BR>
-            <input type="radio" class="form-check-input" name="sort" value="government">  government <BR>
-            <input type="radio" class="form-check-input" name="sort" value="standardOfLiving">  standardOfLiving<BR>
-            <input type="radio" class="form-check-input" name="sort" value="birthday-time">  birthday-time <BR>
+        <form action="sort" method="get" class="filter-form" name="sortForm">
+            <input type="radio" class="form-check-input" name="sortBy" value="id" checked>  id<BR>
+            <input type="radio" class="form-check-input" name="sortBy" value="name">  name<BR>
+            <input type="radio" class="form-check-input" name="sortBy" value="x">  x<BR>
+            <input type="radio" class="form-check-input" name="sortBy" value="y">  y<BR>
+            <input type="radio" class="form-check-input" name="sortBy" value="creation-date">  creation-date<BR>
+            <input type="radio" class="form-check-input" name="sortBy" value="area">  area<BR>
+            <input type="radio" class="form-check-input" name="sortBy" value="population">  population<BR>
+            <input type="radio" class="form-check-input" name="sortBy" value="metersAboveSeaLevel">  metersAboveSeaLevel<BR>
+            <input type="radio" class="form-check-input" name="sortBy" value="timezone">  timezone<BR>
+            <input type="radio" class="form-check-input" name="sortBy" value="government">  government <BR>
+            <input type="radio" class="form-check-input" name="sortBy" value="standardOfLiving">  standardOfLiving<BR>
+            <input type="radio" class="form-check-input" name="sortBy" value="height">  height <BR>
+            <input type="radio" class="form-check-input" name="sortBy" value="birthday-time">  birthday-time <BR>
+
+            Order: <BR>
+            <input type="radio" class="form-check-input" name="order" value="ASC" checked>  ASC<BR>
+            <input type="radio" class="form-check-input" name="order" value="DESC">  DESC<BR>
+
             <input type="submit" class="btn btn-primary name-filter-btn"/>
         </form>
     </div>

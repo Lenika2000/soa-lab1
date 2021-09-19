@@ -81,7 +81,7 @@ function filterListener(form, url, ev) {
             $('table').append(html);
             console.log(filteredCities);
         } else {
-            console.log("Error " + request.status + " occurred when trying to upload your file");
+            console.log("Server filter error " + request.status);
         }
     };
     request.send(formData);
@@ -127,10 +127,83 @@ getUniqueValuesOfMetersAboveSeaLevel.addEventListener('submit',
                 }
                 $('.uniqueValuesOfMetersAboveSeaLevel').append(html);
             } else {
-                console.log("Error " + request.status + " occurred when trying to upload your file");
+                console.log("Error ger unique values " + request.status);
             }
         };
         request.send(formData);
+        ev.preventDefault();
+    }, false);
+
+
+const sortForm = document.forms.namedItem("sortForm");
+sortForm.addEventListener('submit',
+    function (ev) {
+        let url = "/lab1/sort?";
+        $('input[type=radio]').filter(':checked').each(function () {
+            var inputField = $(this);
+            console.log(inputField.attr('name'))
+            console.log(inputField.val())
+            url += inputField.attr('name') + "=" + inputField.val() + "&";
+        });
+        url = url.substring(0, url.length - 1);
+        let request = new XMLHttpRequest();
+        request.responseType = 'document';
+        request.open("GET", url);
+
+        request.onload = function (oEvent) {
+            if (request.status === 200) {
+                console.log(request)
+                let filteredCities = [];
+                let rawData = request.response.getElementsByTagName("cities")[0].getElementsByTagName("cities")[0];
+                let k, i, j, oneRecord, oneObject, innerObject;
+                for (i = 0; i < rawData.children.length; i++) {
+                    oneRecord = rawData.children[i];
+                    oneObject = filteredCities[filteredCities.length] = {};
+                    for (j = 0; j < oneRecord.children.length; j++) {
+                        if (oneRecord.children[j].children.length !== 0 && !oneRecord.children[j].tagName.includes('creationDate')) {
+                            innerObject = oneObject[oneRecord.children[j].tagName] = {};
+                            for (k = 0; k < oneRecord.children[j].children.length; k++) {
+                                console.log(oneRecord.children[j].children[k].tagName);
+                                if (oneRecord.children[j].children[k].tagName.includes('birthday')) {
+                                    let birthdayDate = oneRecord.children[j].children[k].children[0];
+                                    let birthdayTime = oneRecord.children[j].children[k].children[1];
+                                    innerObject[oneRecord.children[j].children[k].tagName] = parseDate(birthdayDate, birthdayTime);
+                                } else {
+                                    innerObject[oneRecord.children[j].children[k].tagName] = oneRecord.children[j].children[k].textContent;
+                                }
+                            }
+                            oneObject[oneRecord.children[j].tagName] = innerObject;
+                        } else {
+                            if (oneRecord.children[j].tagName.includes('creationDate')) {
+                                let dateTime = oneRecord.children[j].children[0];
+                                let date = dateTime.children[0];
+                                let time = dateTime.children[1];
+                                oneObject[oneRecord.children[j].tagName] = parseDate(date, time);
+                            } else {
+                                oneObject[oneRecord.children[j].tagName] = oneRecord.children[j].textContent;
+                            }
+                        }
+                    }
+                }
+                $('.table-rows').remove();
+                let html;
+                for (i = 0; i < filteredCities.length; i++) {
+                    html += "<tr class='table-rows'><td>" + filteredCities[i].id + "</td><td>" + filteredCities[i].name + "</td><td>" + filteredCities[i].coordinates.x
+                        + "</td><td>" + filteredCities[i].coordinates.y + "</td><td>" + filteredCities[i].creationDate + "</td><td>" + filteredCities[i].area
+                        + "</td><td>" + filteredCities[i].population + "</td><td>" + filteredCities[i].metersAboveSeaLevel
+                        + "</td><td>" + filteredCities[i].timezone + "</td><td>" + filteredCities[i].government
+                        + "</td><td>" + filteredCities[i].standardOfLiving + "</td><td>" + filteredCities[i].governor.height
+                        + "</td><td>" + filteredCities[i].governor.birthday + "</td>" +
+                        "<td><a href=edit?id=" + filteredCities[i].id + ">Edit</a>" +
+                        "    <button class='btn btn-primary mx-auto mt-2' onclick='deleteCity(${city.id});'>Delete</button></td></tr>";
+                }
+                $('table').append(html);
+                console.log(filteredCities);
+            } else {
+                console.log("Error sort " + request.status);
+            }
+        };
+        request.send();
         ev.preventDefault();
     }, false);
 

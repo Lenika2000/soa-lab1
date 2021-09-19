@@ -52,6 +52,9 @@ public class CitiesServlet extends HttpServlet {
                 case "/getUniqueValuesOfMetersAboveSeaLevel":
                     getUniqueMetersAboveSeeLevel(request, response);
                     break;
+                case "/sort":
+                    sort(request, response);
+                    break;
                 default:
                     getCities(request, response);
                     break;
@@ -122,4 +125,9 @@ public class CitiesServlet extends HttpServlet {
     private void getUniqueMetersAboveSeeLevel(HttpServletRequest request, HttpServletResponse response) throws Exception {
        cityService.getUniqueMetersAboveSeeLevel(request, response);
     }
+
+    private void sort(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        cityService.sort(request, response);
+    }
+
 }

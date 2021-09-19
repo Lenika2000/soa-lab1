@@ -221,4 +221,33 @@ public class CityDao {
     }
 
 
+    public List<City> sort(String sortBy, String order) {
+        Transaction transaction = null;
+        List<City> cities = null;
+        List<Object[]> citiesListWithExtraColumns = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            if (sortBy.equals("x") || sortBy.equals("y")) {
+                citiesListWithExtraColumns = session.createQuery("from City c join c.coordinates cor ORDER BY cor." + sortBy + " " + order).getResultList();
+            }
+            if (sortBy.equals("height") || sortBy.equals("birthday")) {
+                citiesListWithExtraColumns = session.createQuery("from City c join c.governor g ORDER BY g." + sortBy + " " + order).getResultList();
+            }
+            if (citiesListWithExtraColumns != null && !citiesListWithExtraColumns.isEmpty()) {
+                cities = new ArrayList<>();
+                for (Object[] cityWithExtraColumns : citiesListWithExtraColumns) {
+                    cities.add((City) cityWithExtraColumns[0]);
+                }
+            } else {
+                cities = session.createQuery("from City ORDER BY " + sortBy + " " + order).getResultList();
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return cities;
+    }
 }
