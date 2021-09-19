@@ -62,14 +62,16 @@ public class CityDao {
         }
     }
 
-    public void deleteCity(Long id) {
+    public boolean deleteCity(Long id) {
         Transaction transaction = null;
+        boolean successful = false;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             City city = session.find(City.class, id);
             if (city != null) {
                 session.delete(city);
                 session.flush();
+                successful = true;
             }
             transaction.commit();
         } catch (Exception e) {
@@ -78,6 +80,7 @@ public class CityDao {
             }
             e.printStackTrace();
         }
+        return successful;
     }
 
     public void updateCity(City city) {

@@ -1,8 +1,6 @@
 package servlets;
 
 import dao.CityDao;
-import dao.CoordinatesDao;
-import dao.HumanDao;
 import model.*;
 import model.typesForXml.Cities;
 import model.typesForXml.JaxbCity;
@@ -10,7 +8,6 @@ import model.typesForXml.MetersAboveSeaLevel;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 import validators.CityValidator;
-import util.DateBuilder;
 import util.Jaxb;
 
 import javax.persistence.EntityNotFoundException;
@@ -20,14 +17,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.ValidationException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,9 +33,7 @@ public class CityTableBean extends HttpServlet {
     private CityDao cityDao = new CityDao();
     private Cities cities = new Cities();
     private CityValidator cityValidator = new CityValidator();
-    private MetersAboveSeaLevel metersAboveSeaLevel = new MetersAboveSeaLevel();
-    private CoordinatesDao coordinatesDAO = new CoordinatesDao();
-    private HumanDao humanDAO = new HumanDao();
+    private MetersAboveSeaLevel metersAboveSeaLevel = new MetersAboveSeaLevel();;
 
     public CityTableBean() {
     }
@@ -50,14 +41,10 @@ public class CityTableBean extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException {
         String action = request.getServletPath();
-        System.out.println(action);
         try {
             switch (action) {
                 case "/new":
                     showNewForm(request, response);
-                    break;
-                case "/delete":
-                    deleteCity(request, response);
                     break;
                 case "/edit":
                     showEditForm(request, response);
@@ -104,7 +91,7 @@ public class CityTableBean extends HttpServlet {
         }
     }
 
-    public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             String body = getBody(request);
             JaxbCity cityData = Jaxb.fromStr(body, JaxbCity.class);
@@ -122,6 +109,15 @@ public class CityTableBean extends HttpServlet {
             PrintWriter out = response.getWriter();
             response.setStatus(400);
             out.print(e.getMessage());
+        }
+    }
+
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        Long id = Long.parseLong(request.getParameter("id"));
+        if (cityDao.deleteCity(id)) {
+            response.setStatus(200);
+        } else {
+            throw new EntityNotFoundException("Cannot find human with id " + id);
         }
     }
 
@@ -162,13 +158,6 @@ public class CityTableBean extends HttpServlet {
             request.setAttribute("msg", "Not found city with id=" + id);
         }
         showGetByIdForm(request, response);
-    }
-
-    private void deleteCity(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-        Long id = Long.parseLong(request.getParameter("id"));
-        cityDao.deleteCity(id);
-        getCities(request, response);
     }
 
     private void filterCities(HttpServletRequest request, HttpServletResponse response) {

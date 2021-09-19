@@ -52,7 +52,7 @@
 
                     <td>
                         <a href="edit?id=${city.id}">Edit</a>
-                        <a href="delete?id=${city.id}">Delete</a>
+                        <button class="btn btn-primary mx-auto mt-2" onclick="deleteCity(${city.id});">Delete</button>
                     </td>
                 </tr>
             </c:forEach>

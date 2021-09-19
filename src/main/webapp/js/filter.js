@@ -133,3 +133,12 @@ getUniqueValuesOfMetersAboveSeaLevel.addEventListener('submit',
         request.send(formData);
         ev.preventDefault();
     }, false);
+
+function deleteCity(id) {
+    let request = new XMLHttpRequest();
+    request.open("DELETE", "/lab1/delete?id=" + id);
+    request.onload = function (oEvent) {
+        window.location = '/lab1/';
+    };
+    request.send();
+}
