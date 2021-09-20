@@ -28,7 +28,8 @@
     <div class="error-msg">
     </div>
     <c:if test="${city != null}">
-    <form align="center" name="updateCityForm"></c:if>
+    <div align="center">
+    <form name="updateCityForm"></c:if>
         <c:if test="${city == null}">
         <form action="insert" method="post" align="center"  name="addCityForm"></c:if>
             <c:if test="${city != null}">
@@ -81,10 +82,11 @@
                             value='${city.governor.birthday.format(DateTimeFormatter.ofPattern("HH:mm"))}' required class="form-control"></p>
 
             <c:if test="${city == null}">
-                <input type="submit" class="btn btn-primary mx-auto mt-2"/></c:if>
+                <input type="submit" class="btn btn-primary mx-auto mt-2" value="Add"/></c:if>
         </form>
         <c:if test="${city != null}">
-        <button align="center" class="btn btn-primary mx-auto mt-2" onclick="updateCity()">Update</button></c:if>
+        <button class="btn btn-primary mx-auto mt-2" onclick="updateCity()">Update</button></c:if>
+    </div>
 </div>
 <script>
     <%@ include file="/js/cityForm.js" %>

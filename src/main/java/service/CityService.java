@@ -114,6 +114,7 @@ public class CityService {
         int to = (from + numberOfRecordsPerPage > filteredCities.size()) ? filteredCities.size() : from + numberOfRecordsPerPage ;
         List<City> cities = new ArrayList<>(filteredCities.subList(from , to));
         response.setContentType("text/xml");
+        response.setCharacterEncoding("UTF-8");
         citiesList.setCities(cities);
         response.setStatus(200);
         Writer writer = new StringWriter();

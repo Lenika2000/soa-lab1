@@ -23,13 +23,7 @@ addCityForm.addEventListener('submit', function (ev) {
     request.open("POST", "/lab1/add");
     request.send(newCity);
     request.onload = function (oEvent) {
-        if (request.status === 200) {
-            window.location = '/lab1/';
-        } else {
-            console.log(request.response);
-            $('.error-msg__text').remove();
-            $('.error-msg').append("<p class='error-msg__text alert alert-danger'>" + request.response +"</p>");
-        }
+        getErrorMsg(request);
     };
     ev.preventDefault();
 }, false);
@@ -58,13 +52,17 @@ function updateCity() {
         '      </city>'
     request.open("PUT", "/lab1/update");
     request.onload = function (oEvent) {
-        if (request.status === 200) {
-            window.location = '/lab1/';
-        } else {
-            console.log(request.response);
-            $('.error-msg__text').remove();
-            $('.error-msg').append("<p class='error-msg__text alert alert-danger'>" + request.response +"</p>");
-        }
+        getErrorMsg(request);
     };
     request.send(newCity);
 }
+
+function  getErrorMsg(request) {
+    if (request.status === 200) {
+        window.location = '/lab1/';
+    } else {
+        console.log(request.response);
+        $('.error-msg__text').remove();
+        $('.error-msg').append("<p class='error-msg__text alert alert-danger'>" + request.response +"</p>");
+    }
+};

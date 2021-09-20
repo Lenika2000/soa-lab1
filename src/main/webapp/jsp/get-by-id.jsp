@@ -18,12 +18,12 @@
 </jsp:include>
 <form align="center" action="get" method="get" style="margin-top: 20px">
     <caption><h2>Get city by id</h2></caption>
-    <input class="form-control mt-3" type="text" name="id" style="width: 30%; margin: 0 auto;"/>
+    <input class="form-control mt-3" type="text" name="id" value="0" style="width: 30%; margin: 0 auto;"/>
     <c:if test="${city == null && msg != null}">
         <div class="mx-auto" style="color: red">
             <h7>${msg}</h7>       </div>
     </c:if>
-    <input type="submit" name="get" class="btn btn-primary mx-auto mt-3"/>
+    <input type="submit" name="get" class="btn btn-primary mx-auto mt-3" value="find"/>
 </form>
 <c:if test="${city != null}">
     <div align="center" class="mx-5">

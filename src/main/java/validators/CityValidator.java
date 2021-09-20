@@ -24,7 +24,7 @@ public class CityValidator {
         for (Field f : JaxbCity.class.getDeclaredFields()) {
             f.setAccessible(true);
             if (f.get(city) == null) {
-                errorList.add((String.format("<br>City %s is not specified", f.getName())));
+                errorList.add((String.format("City %s is not specified<br>", f.getName())));
             }
         }
         if (city.getName() != null &&city.getName().isEmpty()) {
@@ -42,7 +42,7 @@ public class CityValidator {
         errorList.addAll(humanValidator.validate(city.getGovernor()));
         errorList.addAll(coordinatesValidator.validate(city.getCoordinates()));
         if (errorList.size() > 0) {
-            throw new ValidationException(String.join(",", errorList));
+            throw new ValidationException(String.join(",<br>", errorList).replace("<br>,", ","));
         }
         return errorList;
     }

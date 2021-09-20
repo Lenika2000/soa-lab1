@@ -15,7 +15,7 @@ public class CoordinatesValidator {
         for (Field f : JaxbCoordinates.class.getDeclaredFields()) {
             f.setAccessible(true);
             if (f.get(coordinates) == null) {
-                errorList.add(String.format("<br>Coordinates %s is not specified<br>", f.getName()));
+                errorList.add(String.format("Coordinates %s is not specified<br>", f.getName()));
             }
         }
         if (coordinates.getY() != null && coordinates.getY() >= 498) {

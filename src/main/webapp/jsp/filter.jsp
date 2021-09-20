@@ -160,7 +160,7 @@
                                                                                                                              class="form-control Birthday" disabled>
             </div>
 
-            <input type="submit" class="btn btn-primary filter-btn" id="filter-btn"/>
+            <input type="submit" class="btn btn-primary filter-btn" id="filter-btn" value="find"/>
         </form>
     </div>
     <div class="tab-pane fade" id="sort">
@@ -183,24 +183,24 @@
             <input type="radio" class="form-check-input" name="order" value="ASC" checked>  ASC<BR>
             <input type="radio" class="form-check-input" name="order" value="DESC">  DESC<BR>
 
-            <input type="submit" class="btn btn-primary name-filter-btn"/>
+            <input type="submit" class="btn btn-primary name-filter-btn" value="sort"/>
         </form>
     </div>
     <div class="tab-pane fade" id="name">
         <form action="filterByName" method="get" class="filter-form" name="filterByName">
             <p> Name: <input type="text" name="name" class="form-control"/></p>
-            <input type="submit" class="btn btn-primary name-filter-btn"/>
+            <input type="submit" class="btn btn-primary name-filter-btn" value="find"/>
         </form>
     </div>
     <div class="tab-pane fade" id="metersAboutSeaLevel">
         <form action="findCitiesMetersAboveSeaLevelMore" method="get" class="filter-form" name="findCitiesMetersAboveSeaLevelMore">
             <p> Get cities with MetersAboveSeaLevel more than </p>
             <p> <input type="text" name="metersAboveSeaLevel" class="form-control"/></p>
-            <input type="submit" class="btn btn-primary name-filter-btn"/>
+            <input type="submit" class="btn btn-primary name-filter-btn" value="find"/>
         </form>
         <form action="getUniqueValuesOfMetersAboveSeaLevel" method="get" class="filter-form uniqueValuesOfMetersAboveSeaLevel" name="getUniqueValuesOfMetersAboveSeaLevel">
             <p> Get unique values of MetersAboveSeeLevel: </p>
-            <input type="submit" class="btn btn-primary name-filter-btn"/>
+            <input type="submit" class="btn btn-primary name-filter-btn" value="find"/>
         </form>
     </div>
 </div>
