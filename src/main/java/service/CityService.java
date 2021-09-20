@@ -3,18 +3,20 @@ package service;
 import dao.CityDao;
 import model.City;
 import model.typesForXml.Cities;
+import model.typesForXml.Errors;
 import model.typesForXml.JaxbCity;
 import model.typesForXml.MetersAboveSeaLevel;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 import util.Jaxb;
 import validators.CityValidator;
+import validators.ValidateFieldsException;
+
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.ValidationException;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -27,6 +29,7 @@ public class CityService {
 
     private final CityDao cityDao;
     private final Cities citiesList;
+    private final Errors errorsList;
     private final CityValidator cityValidator;
     private final MetersAboveSeaLevel metersAboveSeaLevelList;
 
@@ -34,25 +37,25 @@ public class CityService {
         this.cityDao = new CityDao();
         this.cityValidator = new CityValidator();
         this.citiesList = new Cities();
+        this.errorsList = new Errors();
         this.metersAboveSeaLevelList = new MetersAboveSeaLevel();
     }
 
-    public void createCity(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void createCity(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
             String cityBody = getBody(request);
             JaxbCity city = Jaxb.fromStr(cityBody, JaxbCity.class);
             cityValidator.validate(city);
             cityDao.addCity(city.toCity());
             response.setStatus(200);
-        } catch (ValidationException ex) {
-            response.setStatus(400);
-            response.getWriter().print(ex.getMessage());
+        } catch (ValidateFieldsException ex) {
+            sendErrorList(request, response, ex);
         } catch (IllegalAccessException | JAXBException e) {
             e.printStackTrace();
         }
     }
 
-    public void updateCity(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void updateCity(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
             String cityBody = getBody(request);
             JaxbCity cityData = Jaxb.fromStr(cityBody, JaxbCity.class);
@@ -66,9 +69,8 @@ public class CityService {
             } else {
                 throw new EntityNotFoundException("Cannot update city");
             }
-        } catch (ValidationException ex) {
-            response.setStatus(400);
-            response.getWriter().print(ex.getMessage());
+        } catch (ValidateFieldsException ex) {
+            sendErrorList(request, response, ex);
         } catch (IllegalAccessException | JAXBException e) {
             e.printStackTrace();
         }
@@ -120,6 +122,16 @@ public class CityService {
         Writer writer = new StringWriter();
         Serializer serializer = new Persister();
         serializer.write(citiesList, writer);
+        String xml = writer.toString();
+        response.getWriter().print(xml);
+    }
+
+    private void sendErrorList(HttpServletRequest request, HttpServletResponse response, ValidateFieldsException ex) throws Exception {
+        response.setStatus(400);
+        errorsList.setErrors(ex.getErrorMsg());
+        Writer writer = new StringWriter();
+        Serializer serializer = new Persister();
+        serializer.write(errorsList, writer);
         String xml = writer.toString();
         response.getWriter().print(xml);
     }

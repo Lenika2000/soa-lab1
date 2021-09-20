@@ -26,6 +26,7 @@ public class CitiesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException {
         String action = request.getServletPath();
+        System.out.print(action);
         try {
             switch (action) {
                 case "/cities":
@@ -58,11 +59,19 @@ public class CitiesServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        cityService.createCity(request, response);
+        try {
+            cityService.createCity(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        cityService.updateCity(request, response);
+        try {
+            cityService.updateCity(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
