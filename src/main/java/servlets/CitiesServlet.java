@@ -28,31 +28,23 @@ public class CitiesServlet extends HttpServlet {
         String action = request.getServletPath();
         try {
             switch (action) {
-                case "/new":
-                    showNewForm(request, response);
+                case "/cities":
+                    if (request.getParameterMap().isEmpty()) {
+                        getCities(request, response);
+                    } else {
+                        getCityById(request, response);
+                    }
                     break;
-                case "/edit":
-                    showEditForm(request, response);
-                    break;
-                case "/showGetByIdForm":
-                    showGetByIdForm(request, response);
-                    break;
-                case "/get":
-                    getCityById(request, response);
-                    break;
-                case "/filter":
+                case "/cities/filter":
                     filterCities(request, response);
                     break;
-                case "/filterByName":
+                case "/cities/filter/name":
                     filterCitiesByName(request, response);
                     break;
-                case "/findCitiesMetersAboveSeaLevelMore":
+                case "/cities/filter/meters-above-sea-level":
                     filterCitiesByMetersAboveSeaLevel(request, response);
                     break;
-                case "/getUniqueValuesOfMetersAboveSeaLevel":
-                    getUniqueMetersAboveSeeLevel(request, response);
-                    break;
-                case "/sort":
+                case "/cities/sort":
                     sort(request, response);
                     break;
                 default:
@@ -81,24 +73,6 @@ public class CitiesServlet extends HttpServlet {
        cityService.getAllCities(request, response);
     }
 
-    private void showNewForm(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.getRequestDispatcher("jsp/city-form.jsp").forward(request, response);
-    }
-
-    private void showEditForm(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        Long id = Long.parseLong(request.getParameter("id"));
-        Optional<City> existingCity = cityDao.getCityById(id);
-        request.setAttribute("city", existingCity.get());
-        request.getRequestDispatcher("jsp/city-form.jsp").forward(request, response);
-    }
-
-    private void showGetByIdForm(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.getRequestDispatcher("jsp/get-by-id.jsp").forward(request, response);
-    }
-
     private void getCityById(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long id = Long.parseLong(request.getParameter("id"));
         Optional<City> city = cityDao.getCityById(id);
@@ -107,7 +81,7 @@ public class CitiesServlet extends HttpServlet {
         } else {
             request.setAttribute("msg", "Not found city with id=" + id);
         }
-        showGetByIdForm(request, response);
+        request.getRequestDispatcher("/jsp/get-by-id.jsp").forward(request, response);
     }
 
     private void filterCities(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -120,10 +94,6 @@ public class CitiesServlet extends HttpServlet {
 
     private void filterCitiesByMetersAboveSeaLevel(HttpServletRequest request, HttpServletResponse response) throws Exception {
         cityService.filterCitiesByMetersAboveSeaLevel(request, response);
-    }
-
-    private void getUniqueMetersAboveSeeLevel(HttpServletRequest request, HttpServletResponse response) throws Exception {
-       cityService.getUniqueMetersAboveSeeLevel(request, response);
     }
 
     private void sort(HttpServletRequest request, HttpServletResponse response) throws Exception {

@@ -16,7 +16,7 @@
 <jsp:include page="menu.jsp">
     <jsp:param name="id" value="active" />
 </jsp:include>
-<form align="center" action="get" method="get" style="margin-top: 20px">
+<form align="center" action="/lab1/cities" method="get" style="margin-top: 20px">
     <caption><h2>Get city by id</h2></caption>
     <input class="form-control mt-3" type="text" name="id" value="0" style="width: 30%; margin: 0 auto;"/>
     <c:if test="${city == null && msg != null}">

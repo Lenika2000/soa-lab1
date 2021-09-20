@@ -20,7 +20,7 @@ addCityForm.addEventListener('submit', function (ev) {
         '            <birthday>' + formData.get('birthday-date') + "T" + formData.get('birthday-time') + ":00.000" +'</birthday>' +
         '         </governor>' +
         '      </city>'
-    request.open("POST", "/lab1/add");
+    request.open("POST", "/lab1/cities");
     request.send(newCity);
     request.onload = function (oEvent) {
         getErrorMsg(request);
@@ -50,7 +50,7 @@ function updateCity() {
         '            <birthday>' + formData.get('birthday-date') + "T" + formData.get('birthday-time') + ":00.000" +'</birthday>' +
         '         </governor>' +
         '      </city>'
-    request.open("PUT", "/lab1/update");
+    request.open("PUT", "/lab1/cities");
     request.onload = function (oEvent) {
         getErrorMsg(request);
     };

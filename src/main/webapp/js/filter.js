@@ -40,19 +40,19 @@ function filterListener(form, url, ev) {
 
 const filterForm = document.forms.namedItem("filterForm");
 filterForm.addEventListener('submit', function (ev) {
-    filterListener(filterForm, '/lab1/filter', ev);
+    filterListener(filterForm, '/lab1/cities/filter', ev);
 }, false);
 
 const filterByName = document.forms.namedItem("filterByName");
 filterByName.addEventListener('submit',
     function (ev) {
-        filterListener(filterByName, '/lab1/filterByName', ev);
+        filterListener(filterByName, '/lab1/cities/filter/name', ev);
     }, false);
 
 const filterByMetersAboveSeaLevel = document.forms.namedItem("findCitiesMetersAboveSeaLevelMore");
 filterByMetersAboveSeaLevel.addEventListener('submit',
     function (ev) {
-        filterListener(filterByMetersAboveSeaLevel, '/lab1/findCitiesMetersAboveSeaLevelMore', ev);
+        filterListener(filterByMetersAboveSeaLevel, '/lab1/cities/filter/meters-above-sea-level', ev);
     }, false);
 
 const getUniqueValuesOfMetersAboveSeaLevel = document.forms.namedItem("getUniqueValuesOfMetersAboveSeaLevel");
@@ -61,7 +61,7 @@ getUniqueValuesOfMetersAboveSeaLevel.addEventListener('submit',
         let formData = new FormData(getUniqueValuesOfMetersAboveSeaLevel);
         let request = new XMLHttpRequest();
         request.responseType = 'document';
-        request.open("GET", "/lab1/getUniqueValuesOfMetersAboveSeaLevel");
+        request.open("GET", "/lab1/meters-above-sea-level");
 
         request.onload = function (oEvent) {
             if (request.status === 200) {
@@ -88,7 +88,7 @@ getUniqueValuesOfMetersAboveSeaLevel.addEventListener('submit',
 const sortForm = document.forms.namedItem("sortForm");
 sortForm.addEventListener('submit',
     function (ev) {
-        let url = "/lab1/sort?selectedPage=" + document.getElementById("selectedPage").value + "&numberOfRecordsPerPage="+  document.getElementById("numberOfRecordsPerPage").value+ "&";
+        let url = "/lab1/cities/sort?selectedPage=" + document.getElementById("selectedPage").value + "&numberOfRecordsPerPage="+  document.getElementById("numberOfRecordsPerPage").value+ "&";
         $('input[type=radio]').filter(':checked').each(function () {
             var inputField = $(this);
             url += inputField.attr('name') + "=" + inputField.val() + "&";
@@ -170,7 +170,7 @@ function createCityTable(request) {
                 + "</td><td>" + filteredCities[i].timezone + "</td><td>" + filteredCities[i].government
                 + "</td><td>" + filteredCities[i].standardOfLiving + "</td><td>" + filteredCities[i].governor.height
                 + "</td><td>" + filteredCities[i].governor.birthday + "</td>" +
-                "<td><a href=edit?id=" + filteredCities[i].id + ">Edit</a>" +
+                "<td><a href=pages/edit-form?id=" + filteredCities[i].id + ">Edit</a>" +
                 "    <button class='btn btn-primary mx-auto mt-2' onclick='deleteCity(${city.id});'>Delete</button></td></tr>";
         }
         $('table').append(html);

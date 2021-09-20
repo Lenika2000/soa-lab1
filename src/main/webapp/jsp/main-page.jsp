@@ -52,7 +52,7 @@
                     <td>${city.governor.birthday.format( DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))}</td>
 
                     <td>
-                        <a href="edit?id=${city.id}">Edit</a>
+                        <a href="pages/edit-form?id=${city.id}">Edit</a>
                         <button class="btn btn-primary mx-auto mt-2" onclick="deleteCity(${city.id});">Delete</button>
                     </td>
                 </tr>

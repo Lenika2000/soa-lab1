@@ -18,13 +18,13 @@
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <ul class="navbar-nav">
         <li class="nav-item ${param.list}">
-            <a class="nav-link" href="/lab1">City List</a>
+            <a class="nav-link" href="/lab1/cities">City List</a>
         </li>
         <li class="nav-item ${param.new}">
-            <a class="nav-link" href="new">New City</a>
+            <a class="nav-link" href="/lab1/pages/add-city-form">New City</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link ${param.id}" href="showGetByIdForm">Get City by id</a>
+            <a class="nav-link ${param.id}" href="/lab1/pages/get-by-id-form">Get City by id</a>
         </li>
     </ul>
 </nav>
